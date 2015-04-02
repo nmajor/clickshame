@@ -1,0 +1,20 @@
+{
+  "name": "clickshame",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.10.1",
+    "bookshelf": "^0.7.9",
+    "cookie-parser": "~1.3.3",
+    "debug": "~2.1.1",
+    "express": "~4.11.0",
+    "jade": "~1.9.0",
+    "knex": "^0.7.6",
+    "morgan": "~1.5.1",
+    "pg": "^4.3.0",
+    "serve-favicon": "~2.2.0"
+  }
+}
