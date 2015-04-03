@@ -1,12 +1,9 @@
 var express = require('express');
-var strikesController = require('../controllers/strikes');
 var router = express.Router();
+var strikesController = require('../controllers/strikes');
 
-/* GET home page. */
-router.get('/strikes', strikesController.indexStrikes);
-
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Express' });
-// });
+/* GET strikes index. */
+router.get('/', strikesController.index);
+router.post('/', strikesController.create);
 
 module.exports = router;

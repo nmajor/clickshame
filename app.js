@@ -7,14 +7,12 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var strikes = require('./routes/strikes');
+var identities = require('./routes/identities');
 
 var app = express();
 
-var config = require("epa").getEnvironment();
-
-// set up database
-var knex = require('knex')(config.get("dbConfig"));
-var bookshelf = require('bookshelf')(knex);
+var config = require('./config/config');
+var bookshelf = require('./config/dbconnect')(config);
 app.set('bookshelf', bookshelf);
 
 
@@ -32,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/strikes', strikes);
+app.use('/identities', identities);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

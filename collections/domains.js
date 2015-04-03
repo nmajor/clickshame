@@ -1,5 +1,5 @@
-var app = require('../app');
-var bookshelf = app.get('bookshelf');
+var config = require('../config/config');
+var bookshelf = require('../config/dbconnect')(config);
 var Domain = require('../models/domain');
 
 var Domains = bookshelf.Collection.extend({

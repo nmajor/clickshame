@@ -1,4 +1,4 @@
-DEBUG=clickshame ./bin/www
+NODE_ENV=development DEBUG=clickshame ./bin/www
 
 
 API
@@ -22,5 +22,6 @@ get /identities                      - get an identity id
 Knex.js
 knex migrate:make create_strikes // Make migration file
 knex migrate:latest // Migrate
+knex migrate:rollback // Undo all migrations
 knex seed:make seed_name // Make seed file
 knex seed:run // Run seed files

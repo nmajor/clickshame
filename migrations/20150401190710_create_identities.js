@@ -3,7 +3,7 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('identities', function (table) {
     table.increments();
-    table.string('key').index();
+    table.string('key').index().unique();
     table.string('type');
     table.integer('integrity').index();
     table.timestamps();
