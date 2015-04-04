@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
     table.increments();
     table.string('key').index().unique();
     table.string('type');
-    table.integer('integrity').index();
+    table.integer('integrity').index().defaultTo(0);
     table.timestamps();
   });
 };

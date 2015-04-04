@@ -1,8 +1,8 @@
 var config = require('../config/config');
-var bookshelf = require('../config/dbconnect')(config);
+var Bookshelf = require('../config/dbconnect')(config);
 var Domain = require('../models/domain');
 
-var Domains = bookshelf.Collection.extend({
+var Domains = Bookshelf.Collection.extend({
   model: Domain
 });
 

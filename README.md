@@ -1,4 +1,4 @@
-NODE_ENV=development DEBUG=clickshame ./bin/www
+NODE_ENV=development DEBUG=express:* ./bin/www
 
 
 API
@@ -25,3 +25,8 @@ knex migrate:latest // Migrate
 knex migrate:rollback // Undo all migrations
 knex seed:make seed_name // Make seed file
 knex seed:run // Run seed files
+
+knex migrate:rollback
+knex migrate:latest
+
+http://sequelize.readthedocs.org/en/latest/docs/models/

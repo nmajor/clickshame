@@ -3,7 +3,7 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('references', function (table) {
     table.increments().index();
-    table.text('url');
+    table.text('body').index();
     table.integer('score').index();
     table.integer('domain_id').index();
     table.timestamps();

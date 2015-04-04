@@ -15,10 +15,12 @@ module.exports = {
   },
 
   create: function(req, res, next) {
-    key = req.body.key;
-    new Strike({"key": key})
+    var key = req.body.key;
+    var url = req.body.url;
+    new Strike({"key": key, "url": url})
     .save()
     .then(function (model) {
+      model.save()
       res.json(model.toJSON());
     })
     .otherwise(function (error) {

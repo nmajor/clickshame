@@ -1,8 +1,8 @@
 var config = require('../config/config');
-var bookshelf = require('../config/dbconnect')(config);
+var Bookshelf = require('../config/dbconnect')(config);
 var Strike = require('../models/strike');
 
-var Strikes = bookshelf.Collection.extend({
+var Strikes = Bookshelf.Collection.extend({
   model: Strike
 });
 
