@@ -1,0 +1,30 @@
+input.middle:focus { outline-width: 0; }
+.no-outline { outline: none; }
+.clickshame-reference {
+  background-color: rgba(253, 91, 91, 0.3);
+}
+.clickshame-reference:after {
+  padding-left: 4px;
+}
+.clickshame-domain-banner {
+  padding: 3px 10px 5px 10px;
+  background: #FD5B5B;
+  color: white;
+}
+.clickshame-close {
+  float: right;
+}
+.clickshame-close:hover {
+  cursor: pointer;
+}
+.strike-button {
+  padding: 5px 0;
+  margin: 3px 5px;
+  text-align: center;
+  width: 100%;
+  background: #FE5B5B;
+  border: 0;
+  color: #FFF;
+}
+.strike-button:hover { background: #E24A4A; }
+#strike-popup { width: 300px; }

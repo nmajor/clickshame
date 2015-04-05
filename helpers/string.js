@@ -7,9 +7,11 @@ module.exports = {
   },
   getDomainNameFromUrl: function(url_string) {
     var url = require('url');
+    url_string = decodeURIComponent(url_string);
     return (url.parse(url_string).hostname).replace(/^www\./, '');
   },
-  getReferenceFromUrl: function(url_string) {
+  getReferenceBodyFromUrl: function(url_string) {
+    url_string = decodeURIComponent(url_string);
     return url_string.replace(/^[A-Za-z]{1,15}:\/\/[w]{0,3}\.?|[#?].*$/,'').replace(/\/$/, "");
   }
 };

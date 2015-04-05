@@ -1,30 +1,37 @@
-var config = require('../config/config');
-var Bookshelf = require('../config/dbconnect')(config);
-Bookshelf.plugin('registry');
+"use strict";
 
-// require('./strike');
-// require('./domain');
-// require('./identity');
+module.exports = function(sequelize, DataTypes) {
+  var Reference = sequelize.define("Reference", {
+    body: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      unique: true,
+    },
+    score: {
+      type: DataTypes.INTEGER,
+    }
+  }, {
+    underscored: true,
+    tableName: 'references',
+    classMethods: {
+      associate: function(models) {
+        Reference.hasMany(models.Strike);
+      }
+    },
 
-var Reference = Bookshelf.Model.extend({
-  tableName: 'references',
-  strikes: function(){
-    return this.hasMany(Strike);
-  },
-  domain: function() {
-    return this.belongsTo(Domain);
-  },
+    instanceMethods: {
+      updateScore: function() {
+        var models = require('../models');
+        var this_reference = this;
 
-  updateScore: function() {
-    var Strike = require('./strike');
-    var this_reference = this;
+        models.Strike
+        .count({ where: { reference_id: this_reference.id } })
+        .then( function(count) {
+          this_reference.updateAttributes({ score: count });
+        });
+      }
+    },
+  });
 
-    Strike.countReferenceStrikes(this_reference)
-    .then(function(count){
-      this_reference.set('score', count);
-    });
-    // .then(function(){ this_reference.save() });
-  },
-});
-
-module.exports = Bookshelf.model('Reference', Reference);
+  return Reference;
+};

@@ -1,23 +1,44 @@
-var config = require('../config/config');
-var Bookshelf = require('../config/dbconnect')(config);
-Bookshelf.plugin('registry');
-var stringHelper = require('../helpers/string');
+"use strict";
 
-// require('./domain');
-// require('./reference');
-// require('./strike');
+module.exports = function(sequelize, DataTypes) {
+  var Identity = sequelize.define("Identity", {
+    key: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    source: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    integrity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    }
+  }, {
+    underscored: true,
+    tableName: 'identities',
 
-var Identity = Bookshelf.Model.extend({
-  tableName: 'identities',
-  strikes: function(){
-    return this.hasMany(Strike);
-  },
-  initialize: function() {
-    this.on('creating', this.setKey);
-  },
-  setKey: function() {
-    this.set('key', stringHelper.randomString(100));
-  }
-});
+    classMethods: {
+      associate: function(models) {
+        Identity.hasMany(models.Strike);
+      }
+    },
 
-module.exports = Bookshelf.model('Identity', Identity);
+    instanceMethods: {
+      generateAndSetKey: function() {
+        var stringHelper = require('../helpers/string');
+        if (!this.key) this.key = stringHelper.randomString(100);
+      },
+    },
+
+    hooks: {
+      beforeValidate: function(identity) {
+        identity.generateAndSetKey();
+      },
+    }
+  });
+
+  return Identity;
+};

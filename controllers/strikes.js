@@ -1,30 +1,36 @@
-var Strike = require('../models/strike');
-var Strikes = require('../collections/strikes');
+var models  = require('../models');
+var strikeHelper = require('../helpers/strike');
 
 module.exports = {
-  index: function(req, res, next) {
-    var count = req.params.count;
-    Strikes.forge()
-    .fetch()
-    .then(function (collection) {
-      res.json(collection.toJSON());
+  index: function (req, res, next) {
+    var count = strikeHelper.strikeCount(req);
+    models.Strike.findAll({
+      order: [['created_at', 'DESC']],
+      limit: count,
+      attributes: [ "link" ]
     })
-    .otherwise(function (error) {
-      res.status(500).json({msg: error.message});
+    .then(function(models) {
+      res.json(models);
     });
   },
 
   create: function(req, res, next) {
     var key = req.body.key;
-    var url = req.body.url;
-    new Strike({"key": key, "url": url})
-    .save()
-    .then(function (model) {
-      model.save()
-      res.json(model.toJSON());
-    })
-    .otherwise(function (error) {
-      res.status(500).json({msg: error.message});
+    var violation = req.body.violation;
+    var comment = req.body.comment;
+    var link = decodeURIComponent(req.body.link);
+
+    var strike = models.Strike.build({
+      key: key,
+      link: link,
+      violation: violation,
+      comment: comment,
+    });
+
+    strike.findAndSetAssociations()
+    .then(function(strike) { return strike.save(); })
+    .then(function(model) {
+      res.json(model);
     });
   },
 

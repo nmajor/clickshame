@@ -1,112 +1,125 @@
-var config = require('../config/config');
-var Bookshelf = require('../config/dbconnect')(config);
-Bookshelf.plugin('registry');
-var stringHelper = require('../helpers/string');
-var Promise  = require('bluebird');
+"use strict";
 
-var Identity = require('./identity');
-var Domain = require('./domain');
-var Reference = require('./reference');
-
-// require('./identity');
-// require('./domain');
-// require('./reference');
-
-var Strike = Bookshelf.Model.extend({
-  tableName: 'strikes',
-  domain: function() {
-    return this.belongsTo(Domain);
-  },
-  reference: function() {
-    return this.belongsTo(Reference);
-  },
-  identity: function() {
-    return this.belongsTo(Identity);
-  },
-
-  initialize: function() {
-    this.on('creating', this.setIdentity());
-    this.on('creating', this.setDomain());
-    this.on('creating', this.setReference());
-
-    this.on('saved', function(){
-      if (this.domain()) {
-        console.log(this.related('domain'));
-        this.related('domain').updateScore();
+module.exports = function(sequelize, DataTypes) {
+  var Strike = sequelize.define("Strike", {
+    link: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    violation: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isIn: [['misleading_title', 'misinformation', 'emotionally_manipulative']],
       }
-    });
-    // this.on('saved', function(){ if (this.reference()) this.reference().updateScore(); });
-  },
+    },
+    comment: {
+      type: DataTypes.STRING
+    }
+  }, {
+    underscored: true,
+    tableName: 'strikes',
+    timestamps: true,
+    updatedAt: false,
 
-  setIdentity: function() {
-    // var Identity = require('./identity');
-    var this_strike = this;
-    var identity_key = this_strike.attributes.key;
-    delete this_strike.attributes.key;
+    classMethods: {
+      associate: function(models) {
+        Strike.belongsTo(models.Identity);
+        Strike.belongsTo(models.Reference);
+        Strike.belongsTo(models.Domain);
+      }
+    },
 
-    new Identity({key: identity_key})
-    .fetch()
-    .then(function(model) {
-      if (!model) throw new Error('Could not find an identity from this key');
-      this_strike.set('identity_id', model.id);
-    });
-  },
+    instanceMethods: {
+      findAndSetIdentity: function() {
+        var this_strike = this;
+        var models = require('../models');
+        var Promise = require("bluebird");
+        var resolver = Promise.pending();
 
-  setDomain: function() {
-    // var Domain = require('./domain');
-    var this_strike = this;
-    var url = this_strike.get('url');
-    var domain_name = stringHelper.getDomainNameFromUrl(url);
-
-    new Domain({name: domain_name})
-    .fetch()
-    .then(function(model) {
-      if (model) {
-        this_strike.set('domain_id', model.id);
-      } else {
-        new Domain({name: domain_name})
-        .save()
-        .then(function(model) {
-          this_strike.set('domain_id', model.id);
+        models.Identity
+        .find({ where: { key: this.key } })
+        .then(function(identity) {
+          this_strike.set("identity_id", identity.id);
+          resolver.resolve(this_strike);
         });
-      }
-    });
-  },
+        return resolver.promise;
+      },
 
-  setReference: function() {
-    // var Reference = require('./reference');
-    var this_strike = this;
-    var url = this_strike.get('url');
-    var reference_body = stringHelper.getReferenceFromUrl(url);
+      findAndSetDomain: function() {
+        var Promise = require("bluebird");
+        var resolver = Promise.pending();
+        var this_strike = this;
+        var models = require('../models');
+        var stringHelper = require('../helpers/string');
+        var domain_name = stringHelper.getDomainNameFromUrl(this_strike.link);
 
-    new Reference({body: reference_body})
-    .fetch()
-    .then(function(model) {
-      if (model) {
-        this_strike.set('reference_id', model.id);
-      } else {
-        new Reference({body: reference_body})
-        .save()
-        .then(function(model) {
-          this_strike.set('reference_id', model.id);
+        models.Domain
+        .find({ where: { name: domain_name } })
+        .then(function(domain) {
+          if (domain) {
+            this_strike.set("domain_id", domain.id);
+            resolver.resolve(this_strike);
+          } else {
+            models.Domain
+            .create({ name: domain_name })
+            .then(function(domain) {
+              resolver.resolve(this_strike);
+              this_strike.set("domain_id", domain.id);
+            });
+          }
         });
-      }
-    });
-  },
-},
-{
-  countDomainStrikes: function(domain) {
-    return Bookshelf.knex('strikes')
-    .count()
-    .where({ domain_id: domain.id })
-    .then(function(result) { return result[0].count; });
-  },
-  countReferenceStrikes: function(reference) {
-    return Bookshelf.knex('strikes')
-    .count()
-    .where({ reference_id: reference.id })
-    .then(function(result) { return result[0].count; });
-  }
-});
+        return resolver.promise;
+      },
 
-module.exports = Bookshelf.model('Strike', Strike);
+      findAndSetReference: function() {
+        var Promise = require("bluebird");
+        var resolver = Promise.pending();
+        var this_strike = this;
+        var models = require('../models');
+        var stringHelper = require('../helpers/string');
+        var reference_body = stringHelper.getReferenceBodyFromUrl(this_strike.link);
+
+        models.Reference
+        .find({ where: { body: reference_body } })
+        .then(function(reference) {
+          if (reference) {
+            this_strike.set("reference_id", reference.id);
+            resolver.resolve(this_strike);
+          } else {
+            models.Reference
+            .create({ body: reference_body })
+            .then(function(reference) {
+              this_strike.set("reference_id", reference.id);
+              resolver.resolve(this_strike);
+            });
+          }
+        });
+        return resolver.promise;
+      },
+
+      findAndSetAssociations: function() {
+        return this.findAndSetIdentity()
+        .then(function(strike) { return strike.findAndSetDomain(); })
+        .then(function(strike) { return strike.findAndSetReference(); });
+      }
+    },
+
+    hooks: {
+      afterCreate: function(strike) {
+        strike.getDomain().then(function(domain) { domain.updateScore() });
+        strike.getReference().then(function(reference) { reference.updateScore() });
+      }
+    },
+
+    getterMethods: {
+      key: function() { return this._key },
+    },
+
+    setterMethods: {
+      key: function(v) { this._key = v },
+    }
+  });
+
+  return Strike;
+};

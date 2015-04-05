@@ -8,13 +8,10 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var strikes = require('./routes/strikes');
 var identities = require('./routes/identities');
+var references = require('./routes/references');
+var domains = require('./routes/domains');
 
 var app = express();
-
-var config = require('./config/config');
-var bookshelf = require('./config/dbconnect')(config);
-app.set('bookshelf', bookshelf);
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,6 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/strikes', strikes);
 app.use('/identities', identities);
+app.use('/references', references);
+app.use('/domains', domains);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
