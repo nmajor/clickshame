@@ -1,4 +1,16 @@
-input.middle:focus { outline-width: 0; }
+#clickshame-strike {
+  height: 300px;
+  width: 300px;
+  margin: 0px;
+  border: none;
+  overflow: visible;
+  float: right;
+  display: inline;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  z-index: 2000000001;
+}
 .no-outline { outline: none; }
 .clickshame-reference {
   background-color: rgba(253, 91, 91, 0.3);
@@ -26,5 +38,5 @@ input.middle:focus { outline-width: 0; }
   border: 0;
   color: #FFF;
 }
-.strike-button:hover { background: #E24A4A; }
-#strike-popup { width: 300px; }
+.strike-button:hover { background: #E24A4A; cursor: pointer; }
+.strike-fields { height: 500px; width: 500px; }

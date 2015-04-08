@@ -1,9 +1,13 @@
 'use strict';
 
-chrome.runtime.onInstalled.addListener(function (details) {
-  console.log('previousVersion', details.previousVersion);
+function callForm() {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {}, function(response) {
+      console.log(response);
+    });
+  });
+}
+
+chrome.browserAction.onClicked.addListener(function() {
+  callForm();
 });
-
-// chrome.browserAction.setBadgeText({text: '\'Allo'});
-
-console.log('\'Allo \'Allo! Event Page for Browser Action');

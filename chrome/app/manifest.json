@@ -8,18 +8,15 @@
     },
     "default_locale": "en",
     "background": {
-        "scripts": [
-            "scripts/chromereload.js",
-            "scripts/background.js"
-        ]
+        "page": "background.html",
+        "persistent": false
     },
     "browser_action": {
         "default_icon": {
             "19": "images/icon-19.png",
             "38": "images/icon-38.png"
         },
-        "default_title": "Click Shame Beta",
-        "default_popup": "popup.html"
+        "default_title": "Click Shame Beta"
     },
     "options_page": "options.html",
     "content_scripts": [
@@ -29,7 +26,7 @@
                 "https://*/*"
             ],
             "css": [
-                "styles/main.css"
+                "styles/strike.css"
             ],
             "js": [
                 "scripts/contentscript.js"
@@ -39,6 +36,9 @@
         }
     ],
     "permissions": [
-        "tabs"
-    ]
+        "tabs",
+        "background",
+        "activeTab"
+    ],
+    "web_accessible_resources": ["strike.html"]
 }
