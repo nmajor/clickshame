@@ -41,6 +41,4 @@ function strikeThis() {
   });
 }
 
-console.log('blah1');
 document.getElementById('strike-submit').addEventListener('click', strikeThis);
-console.log('blah2');

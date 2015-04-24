@@ -1,0 +1,12 @@
+.strike-footer {
+  padding: 5px;
+  background: #ccc;
+  font-size: 15px;
+}
+.strike-feedback { display: inline-block; width: 93%; text-align: right; }
+#strike-close {
+  display: inline-block;
+  width: 5%;
+  text-align: left;
+}
+#strike-close:hover { cursor: pointer; }
