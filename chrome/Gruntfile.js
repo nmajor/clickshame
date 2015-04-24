@@ -108,7 +108,8 @@ module.exports = function (grunt) {
     jshint: {
       options: {
         jshintrc: '.jshintrc',
-        reporter: require('jshint-stylish')
+        reporter: require('jshint-stylish'),
+        ignores: ['app/scripts/jquery-2.1.3.min.js']
       },
       all: [
         'Gruntfile.js',

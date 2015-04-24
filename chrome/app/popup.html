@@ -9,33 +9,44 @@
         <!-- build:css styles/main.css -->
         <link href="styles/main.css" rel="stylesheet">
         <!-- endbuild -->
-        <script src="scripts/jquery.min.js"></script>
+
+        <!-- build:js scripts/jquery-2.1.3.min.js -->
+        <script src="scripts/jquery-2.1.3.min.js"></script>
+        <!-- endbuild -->
     </head>
     <body>
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
         <!-- endbower -->
         <!-- endbuild -->
-        <div class="strike-wrapper">
-          <div class="strike-header">
-            <h2>Report Clickshame</h2>
+        <div class="wrapper">
+          <div class="options">
+            <div id="disable-domain">Disable for this domain</div>
+            <div id="disable-page">Disable for this page</div>
+            <div id="disable">Pause clickshame</div>
           </div>
 
-          <div id="strike-fields">
-            <textarea class="no-outline" id="strike-comment" placeholder="140 Character Limit..." maxlength="140"></textarea>
-            <div class="inline-checkbox">
-              <input class="no-outline strike-button" type="radio" id="strike-violation" name="strike-violation" value="misleading_title" checked>
-              <label>Misleading Title</label>
+          <div class="strike">
+            <div class="strike-header">
+              <h2>Report Clickshame</h2>
             </div>
-            <div class="inline-checkbox">
-              <input class="no-outline strike-button" type="radio" id="strike-violation" name="strike-violation" value="misinformation">
-              <label>Misinformation</label>
+
+            <div id="strike-fields">
+              <textarea class="no-outline" id="strike-comment" placeholder="140 Character Limit..." maxlength="140"></textarea>
+              <div class="inline-checkbox">
+                <input class="no-outline strike-button" type="radio" id="strike-violation" name="strike-violation" value="misleading_title" checked>
+                <label>Misleading Title</label>
+              </div>
+              <div class="inline-checkbox">
+                <input class="no-outline strike-button" type="radio" id="strike-violation" name="strike-violation" value="misinformation">
+                <label>Misinformation</label>
+              </div>
+              <div class="inline-checkbox">
+                <input class="no-outline strike-button" type="radio" id="strike-violation" name="strike-violation" value="emotionally_manipulative">
+                <label>Emotionally Manipulative</label>
+              </div>
+              <input class="no-outline strike-button" type="button" id="strike-submit" value="Submit">
             </div>
-            <div class="inline-checkbox">
-              <input class="no-outline strike-button" type="radio" id="strike-violation" name="strike-violation" value="emotionally_manipulative">
-              <label>Emotionally Manipulative</label>
-            </div>
-            <input class="no-outline strike-button" type="button" id="strike-submit" value="Submit">
           </div>
         </div>
 

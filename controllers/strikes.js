@@ -19,13 +19,6 @@ module.exports = {
     var violation = req.body.violation;
     var comment = req.body.comment;
     var link = decodeURIComponent(req.body.link);
-    console.log('blah1');
-    console.log({
-      key: key,
-      link: link,
-      violation: violation,
-      comment: comment,
-    });
 
     var strike = models.Strike.build({
       key: key,
