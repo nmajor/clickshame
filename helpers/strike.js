@@ -20,7 +20,7 @@ module.exports = {
     models.Strike.findAll({
       order: [['created_at', 'DESC']],
       limit: count,
-      attributes: [ "link", "created_at" ]
+      attributes: [ "url", "created_at" ]
     })
     .then(function(models) {
       res.json(models);
@@ -28,12 +28,12 @@ module.exports = {
   },
 
   findStrike: function(req, res, next) {
-    var link = decodeURIComponent(req.body.link);
+    var url = decodeURIComponent(req.body.url);
     var key = req.body.key;
 
     var strike = models.Strike.build({
       key: key,
-      link: link,
+      url: url,
     });
 
     strike.findAndSetAssociations()

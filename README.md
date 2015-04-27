@@ -30,4 +30,7 @@ params = {
   count: { data: "number", returns: "the top [count] domains with the most strikes" },
 }
 
-sequelize migration:create --name [migration_name] --config env/development.js
+sequelize migration:create --name [migration_name]       # Generates a new migration file.
+sequelize db:migrate        # Run pending migrations.
+
+node ./scripts/dbsync.js         # Sync db tables with models

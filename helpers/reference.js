@@ -22,7 +22,7 @@ module.exports = {
     models.Reference.findAll({
       order: [['score', 'DESC']],
       limit: count,
-      attributes: ["body", "score"]
+      attributes: ["url", "score"]
     })
     .then(function(models) {
       res.json(models);
@@ -30,11 +30,11 @@ module.exports = {
   },
 
   searchForOneReference: function(req, res, next) {
-    url = stringHelper.getReferenceBodyFromUrl(req.query.url);
+    url = stringHelper.cleanUrl(req.query.url);
 
     models.Reference.find({
-      where: { body: url },
-      attributes: [ "body", "score" ]
+      where: { url: url },
+      attributes: [ "url", "score" ]
     }).then(function(models) {
       if (!models) return res.json({});
       res.json(models);
@@ -46,12 +46,12 @@ module.exports = {
 
     var urls = req.query.urls;
     for(i=0; i<urls.length; i++) {
-      urls[i] = stringHelper.getReferenceBodyFromUrl(urls[i]);
+      urls[i] = stringHelper.cleanUrl(urls[i]);
     }
 
     models.Reference.findAll({
-      where: { body: urls },
-      attributes: [ "body", "score" ]
+      where: { url: urls },
+      attributes: [ "url", "score" ]
     }).then(function(models) {
       if (!models) return res.json([]);
       res.json(models);

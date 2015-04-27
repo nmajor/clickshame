@@ -3,7 +3,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   var Strike = sequelize.define("Strike", {
-    link: {
+    url: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
@@ -53,7 +53,7 @@ module.exports = function(sequelize, DataTypes) {
         var this_strike = this;
         var models = require('../models');
         var stringHelper = require('../helpers/string');
-        var domain_name = stringHelper.getDomainNameFromUrl(this_strike.link);
+        var domain_name = stringHelper.getDomainNameFromUrl(this_strike.url);
 
         models.Domain
         .find({ where: { name: domain_name } })
@@ -79,17 +79,17 @@ module.exports = function(sequelize, DataTypes) {
         var this_strike = this;
         var models = require('../models');
         var stringHelper = require('../helpers/string');
-        var reference_body = stringHelper.getReferenceBodyFromUrl(this_strike.link);
+        var reference_url = stringHelper.cleanUrl(this_strike.url);
 
         models.Reference
-        .find({ where: { body: reference_body } })
+        .find({ where: { url: reference_url } })
         .then(function(reference) {
           if (reference) {
             this_strike.set("reference_id", reference.id);
             resolver.resolve(this_strike);
           } else {
             models.Reference
-            .create({ body: reference_body })
+            .create({ url: reference_url })
             .then(function(reference) {
               this_strike.set("reference_id", reference.id);
               resolver.resolve(this_strike);

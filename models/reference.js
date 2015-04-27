@@ -3,7 +3,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   var Reference = sequelize.define("Reference", {
-    body: {
+    url: {
       type: DataTypes.TEXT,
       allowNull: false,
       unique: true,

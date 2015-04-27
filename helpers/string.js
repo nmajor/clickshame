@@ -10,7 +10,7 @@ module.exports = {
     url_string = decodeURIComponent(url_string);
     return (url.parse(url_string).hostname).replace(/^www\./, '');
   },
-  getReferenceBodyFromUrl: function(url_string) {
+  cleanUrl: function(url_string) {
     url_string = decodeURIComponent(url_string);
     return url_string.replace(/^[A-Za-z]{1,15}:\/\/[w]{0,3}\.?/, '').replace(/[#?](.*)$/,'').replace(/\/$/, '');
   }
