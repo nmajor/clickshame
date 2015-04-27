@@ -31,11 +31,3 @@ params = {
 }
 
 sequelize migration:create --name [migration_name] --config env/development.js
-
-
-http://stackoverflow.com/questions/10608613/how-can-i-trigger-a-content-script-to-run-when-i-click-the-popup-icon-of-a-googl
-http://stackoverflow.com/questions/20019958/chrome-extension-how-to-send-data-from-content-script-to-popup-html
-https://developer.chrome.com/extensions/content_scripts#pi
-https://developer.chrome.com/extensions/messaging
-http://src.chromium.org/viewvc/chrome/trunk/src/chrome/common/extensions/docs/examples/api/messaging/timer/
-

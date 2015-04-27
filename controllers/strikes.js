@@ -1,17 +1,18 @@
+/*jslint node: true */
+'use strict';
+
 var models  = require('../models');
 var strikeHelper = require('../helpers/strike');
 
 module.exports = {
-  index: function (req, res, next) {
-    var count = strikeHelper.strikeCount(req);
-    models.Strike.findAll({
-      order: [['created_at', 'DESC']],
-      limit: count,
-      attributes: [ "link" ]
-    })
-    .then(function(models) {
-      res.json(models);
-    });
+  index: function(req, res, next) {
+    if ( req.query ) {
+      console.log('heyman1');
+      strikeHelper.findStrike(req, res, next);
+    } else {
+      console.log('heyman2');
+      strikeHelper.recentStrikes(req, res, next);
+    }
   },
 
   create: function(req, res, next) {

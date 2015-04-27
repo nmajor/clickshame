@@ -12,6 +12,6 @@ module.exports = {
   },
   getReferenceBodyFromUrl: function(url_string) {
     url_string = decodeURIComponent(url_string);
-    return url_string.replace(/^[A-Za-z]{1,15}:\/\/[w]{0,3}\.?|[#?].*$/,'').replace(/\/$/, "");
+    return url_string.replace(/^[A-Za-z]{1,15}:\/\/[w]{0,3}\.?/, '').replace(/[#?](.*)$/,'').replace(/\/$/, '');
   }
 };

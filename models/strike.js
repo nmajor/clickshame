@@ -1,3 +1,4 @@
+/*jslint node: true */
 "use strict";
 
 module.exports = function(sequelize, DataTypes) {
@@ -10,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [['misleading_title', 'misinformation', 'emotionally_manipulative']],
+        isIn: [['misleading_title', 'misinformation', 'emotionally_manipulative']]
       }
     },
     comment: {
@@ -102,22 +103,47 @@ module.exports = function(sequelize, DataTypes) {
         return this.findAndSetIdentity()
         .then(function(strike) { return strike.findAndSetDomain(); })
         .then(function(strike) { return strike.findAndSetReference(); });
+      },
+
+      likeMe: function(strike) {
+        var Promise = require("bluebird");
+        var this_strike = this;
+        return new Promise(function(resolve){
+          this_strike.Model.find( { where: { reference_id: this_strike.reference_id, identity_id: this_strike.identity_id } } )
+          .then(function(strike){
+            resolve( strike );
+          });
+        });
+      },
+
+      isUnique: function() {
+        return this.likeMe().then(function(strike) {
+          if ( strike ) { return false; } else { return true; }
+        });
       }
     },
 
     hooks: {
       afterCreate: function(strike) {
-        strike.getDomain().then(function(domain) { domain.updateScore() });
-        strike.getReference().then(function(reference) { reference.updateScore() });
+        strike.getDomain().then(function(domain) { domain.updateScore(); });
+        strike.getReference().then(function(reference) { reference.updateScore(); });
       }
     },
 
     getterMethods: {
-      key: function() { return this._key },
+      key: function() { return this._key; },
     },
 
     setterMethods: {
-      key: function(v) { this._key = v },
+      key: function(v) { this._key = v; },
+    },
+
+    validate: {
+      isUnique: function() {
+        this.isUnique().then(function(uni){
+          if ( !uni ) { throw new Error('This Identity has already submitted this reference!'); }
+        });
+      }
     }
   });
 
