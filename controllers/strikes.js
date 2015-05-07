@@ -15,14 +15,14 @@ module.exports = {
 
   create: function(req, res, next) {
     var key = req.body.key;
-    var violation = req.body.violation;
+    var type = req.body.type;
     var comment = req.body.comment;
     var url = decodeURIComponent(req.body.url);
 
     var strike = models.Strike.build({
       key: key,
       url: url,
-      violation: violation,
+      type: type,
       comment: comment,
     });
 

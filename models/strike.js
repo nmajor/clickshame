@@ -7,16 +7,13 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    violation: {
+    type: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [['misleading_title', 'misinformation', 'emotionally_manipulative']]
+        isIn: [ ['misleading_title', 'misinformation', 'emotionally_manipulative'] ]
       }
     },
-    comment: {
-      type: DataTypes.STRING
-    }
   }, {
     underscored: true,
     tableName: 'strikes',
@@ -28,6 +25,7 @@ module.exports = function(sequelize, DataTypes) {
         Strike.belongsTo(models.Identity);
         Strike.belongsTo(models.Reference);
         Strike.belongsTo(models.Domain);
+        Strike.hasOne(models.Comment);
       }
     },
 
@@ -125,8 +123,9 @@ module.exports = function(sequelize, DataTypes) {
 
     hooks: {
       afterCreate: function(strike) {
-        strike.getDomain().then(function(domain) { domain.updateScore(); });
-        strike.getReference().then(function(reference) { reference.updateScore(); });
+        strike.getDomain().then(function(domain) { domain.updateTypeScore(strike.type).then(function(domain) { domain.updateCompositeScore(); }); });
+        strike.getReference().then(function(reference) { reference.updateTypeScore(strike.type).then(function(reference) { reference.updateCompositeScore(); }); });
+        strike.createComment( { text: strike._comment } );
       }
     },
 
@@ -136,6 +135,7 @@ module.exports = function(sequelize, DataTypes) {
 
     setterMethods: {
       key: function(v) { this._key = v; },
+      comment: function(v) { this._comment = v; },
     },
 
     validate: {

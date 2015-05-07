@@ -34,3 +34,14 @@ sequelize migration:create --name [migration_name]       # Generates a new migra
 sequelize db:migrate        # Run pending migrations.
 
 node ./scripts/dbsync.js         # Sync db tables with models
+
+drop table "SequelizeMeta","comments","domains","identities","references","scores","strikes" cascade;
+
+node ./scripts/dbsync.js
+sequelize db:migrate
+
+
+sudo npm install pm2 -g
+sudo su - deployer
+cd /home/deployer/clickshame
+pm2 start nodejs ./bin/www

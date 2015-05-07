@@ -33,8 +33,9 @@ module.exports = {
     url = stringHelper.cleanUrl(req.query.url);
 
     models.Reference.find({
+      include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
       where: { url: url },
-      attributes: [ "url", "score" ]
+      attributes: [ "url" ]
     }).then(function(models) {
       if (!models) return res.json({});
       res.json(models);
@@ -50,8 +51,9 @@ module.exports = {
     }
 
     models.Reference.findAll({
+      include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
       where: { url: urls },
-      attributes: [ "url", "score" ]
+      attributes: [ "url" ]
     }).then(function(models) {
       if (!models) return res.json([]);
       res.json(models);
