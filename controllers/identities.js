@@ -6,8 +6,10 @@ module.exports = {
     var source = req.body.source;
     models.Identity
     .create({source: source})
-    .then(function (model) {
-      res.json(model.toJSON());
+    .then(function (identity) {
+      identity.filter().then(function(filtered_identity) {
+        res.json(filtered_identity);
+      });
     });
   },
 

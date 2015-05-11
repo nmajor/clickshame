@@ -11,6 +11,7 @@ module.exports = {
       domainHelper.topDomains(req, res, next);
     }
   },
+
   // index: function (req, res, next) {
   //   var max = 100;
   //   var def = 10;

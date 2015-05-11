@@ -1,5 +1,6 @@
 NODE_ENV=development DEBUG=express:* ./bin/www
-
+NODE_ENV=test mocha
+NODE_ENV=production pm2 start ./bin/www
 
 API
 
@@ -37,11 +38,20 @@ node ./scripts/dbsync.js         # Sync db tables with models
 
 drop table "SequelizeMeta","comments","domains","identities","references","scores","strikes" cascade;
 
-node ./scripts/dbsync.js
-sequelize db:migrate
+NODE_ENV=test node ./scripts/dbsync.js
+NODE_ENV=test sequelize db:migrate
 
 
-sudo npm install pm2 -g
-sudo su - deployer
-cd /home/deployer/clickshame
-pm2 start nodejs ./bin/www
+
+resolve, reject
+
+http://joind.in/14022
+
+
+/strikes/recent
+/strikes/find
+/referenes/top
+/references/find
+/domains/top
+/domains/find
+

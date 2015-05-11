@@ -1,0 +1,221 @@
+[
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://www.upworthy.com/see-what-happened-when-stephen-colbert-saw-the-wishlist-of-hundreds-of-teachers-from-his-home-state-ma3-2d?c=hpstream",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "upworthy.com" },
+        "reference": { "url": "upworthy.com/see-what-happened-when-stephen-colbert-saw-the-wishlist-of-hundreds-of-teachers-from-his-home-state-ma3-2d" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://distractify.com/jake-heppner/scenes-from-the-past-you-never-expected-never-seen-before/",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "distractify.com" },
+        "reference": { "url": "distractify.com/jake-heppner/scenes-from-the-past-you-never-expected-never-seen-before" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://www.globalpost.com/article/6537732/2015/05/04/moldova-protest-stolen-1-billion",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "globalpost.com" },
+        "reference": { "url": "globalpost.com/article/6537732/2015/05/04/moldova-protest-stolen-1-billion" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://wtvr.com/2015/05/06/lance-calvin-buckley-missing/",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "wtvr.com" },
+        "reference": { "url": "wtvr.com/2015/05/06/lance-calvin-buckley-missing" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://www.washingtonpost.com/news/speaking-of-science/wp/2014/11/14/scientist-apologizes-for-his-sexist-shirt-but-the-internet-still-wants-women-to-shut-up-and-die/",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "washingtonpost.com" },
+        "reference": { "url": "washingtonpost.com/news/speaking-of-science/wp/2014/11/14/scientist-apologizes-for-his-sexist-shirt-but-the-internet-still-wants-women-to-shut-up-and-die" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://www.theguardian.com/science/2014/nov/14/rosetta-comet-dr-matt-taylor-apology-sexist-shirt",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "theguardian.com" },
+        "reference": { "url": "theguardian.com/science/2014/nov/14/rosetta-comet-dr-matt-taylor-apology-sexist-shirt" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://www.cnn.com/2014/11/13/living/matt-taylor-shirt-philae-rosetta-project/",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "cnn.com" },
+        "reference": { "url": "cnn.com/2014/11/13/living/matt-taylor-shirt-philae-rosetta-project" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://mashable.com/2014/11/13/esa-scientist-sexist-shirt/",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "mashable.com" },
+        "reference": { "url": "mashable.com/2014/11/13/esa-scientist-sexist-shirt" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://www.mediaite.com/tv/comet-scientist-breaks-down-in-tears-apologizing-for-sexist-shirt/",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "mediaite.com" },
+        "reference": { "url": "mediaite.com/tv/comet-scientist-breaks-down-in-tears-apologizing-for-sexist-shirt" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://www.buzzfeed.com/pfequiere/heres-what-the-cast-of-my-wife-kids-look-like-wu27#.qnzExVXyw",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "buzzfeed.com" },
+        "reference": { "url": "buzzfeed.com/pfequiere/heres-what-the-cast-of-my-wife-kids-look-like-wu27" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://www.upworthy.com/they-survived-1000-years-in-the-middle-of-the-pacific-and-then-we-arrived?c=reccon1",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "upworthy.com" },
+        "reference": { "url": "upworthy.com/they-survived-1000-years-in-the-middle-of-the-pacific-and-then-we-arrived" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://www.huffingtonpost.com/thomas-church/ryan-holiday-trust-me-im-lying_b_1715524.html",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "huffingtonpost.com" },
+        "reference": { "url": "huffingtonpost.com/thomas-church/ryan-holiday-trust-me-im-lying_b_1715524.html" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://www.wired.com/2012/04/can-an-algorithm-write-a-better-news-story-than-a-human-reporter/",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "wired.com" },
+        "reference": { "url": "wired.com/2012/04/can-an-algorithm-write-a-better-news-story-than-a-human-reporter" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://www.rollingstone.com/politics/news/how-roger-ailes-built-the-fox-news-fear-factory-20110525",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "rollingstone.com" },
+        "reference": { "url": "rollingstone.com/politics/news/how-roger-ailes-built-the-fox-news-fear-factory-20110525" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  },
+  {
+    "model": "Strike",
+    "data": {
+        "key": "fz5q5DSvgy9Zj9YqvbuLMYWsJ6I74NYP5u5MPBJEyAv1OwwocwKoasND3L4DtYHHGTwsgzGgTDZKtRHq3HtAXocYLOICCFt4Ph3V",
+        "url": "http://www.bbc.com/news/blogs/ouch",
+        "comment": "this sucks!",
+        "type": "misleading_title",
+        "domain": { "name": "bbc.com" },
+        "reference": { "url": "bbc.com/news/blogs/ouch" }
+    },
+    "saveOptions": {
+        "fields": ["key", "url", "comment", "type"]
+    }
+  }
+]
+
+
+
+
+
+
+
+
+

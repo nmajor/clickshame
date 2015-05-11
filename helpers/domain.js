@@ -20,9 +20,10 @@ module.exports = {
     count = this.domainCount(req);
 
     models.Domain.findAll({
-      order: [['score', 'DESC']],
+      include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
+      order: '"Scores"."value" DESC',
       limit: count,
-      attributes: ["name", "score"]
+      attributes: ["name"]
     })
     .then(function(models) {
       res.json(models);
@@ -49,8 +50,9 @@ module.exports = {
   searchForOneDomainByDomain: function(req, res, next, domain) {
 
     models.Domain.find({
+      include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
       where: { name: domain },
-      attributes: [ "name", "score" ]
+      attributes: [ "name" ]
     }).then(function(models) {
       if (!models) return res.json({});
       res.json(models);
@@ -61,8 +63,9 @@ module.exports = {
     if (!Array.isArray(req.query.domains)) return res.status(501).send('You have to pass in an array for the "domains" parameter');
 
     models.Domain.findAll({
+      include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
       where: { name: domains },
-      attributes: [ "name", "score" ]
+      attributes: [ "name" ]
     }).then(function(models) {
       if (!models) return res.json([]);
       res.json(models);

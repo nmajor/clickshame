@@ -1,5 +1,6 @@
 /*jslint node: true */
 "use strict";
+var Promise = require("bluebird");
 
 module.exports = function(sequelize, DataTypes) {
   var Strike = sequelize.define("Strike", {
@@ -13,7 +14,7 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         isIn: [ ['misleading_title', 'misinformation', 'emotionally_manipulative'] ]
       }
-    },
+    }
   }, {
     underscored: true,
     tableName: 'strikes',
@@ -25,125 +26,172 @@ module.exports = function(sequelize, DataTypes) {
         Strike.belongsTo(models.Identity);
         Strike.belongsTo(models.Reference);
         Strike.belongsTo(models.Domain);
-        Strike.hasOne(models.Comment);
+        Strike.hasOne(models.Comment, { onDelete: 'cascade', hooks: true } );
+      },
+
+      recent: function(count) {
+        return Strike.findAll({
+          order: [['created_at', 'DESC']],
+          limit: count,
+          attributes: [ "url", "created_at" ]
+        });
+      },
+
+      findByKeyAndUrl: function(key, url) {
+        var models = require('../models');
+        return models.Identity.find({ where: { key: key } })
+        .then(function(identity) {
+          return new Promise(function(resolve, reject){
+            if ( !identity ) { reject('Invalid identity key.'); }
+            else {
+              Strike.find({ where: { url: url, identity_id: identity.id } })
+              .then( function(strike) { resolve(strike); });
+            }
+          });
+        });
+      },
+
+      filter: function(strike) {
+        if ( !strike ) { return new Promise(function(resolve){ resolve(''); }); }
+        return strike.getComment()
+        .then(function(comment) {
+          return new Promise(function(resolve){
+            var comment_text = '';
+            if ( comment ) { comment_text = comment.text; }
+
+            resolve({
+              type: strike.type,
+              comment: comment_text,
+              url: strike.url,
+              created_at: strike.created_at,
+            });
+          });
+        });
       }
     },
 
     instanceMethods: {
-      findAndSetIdentity: function() {
-        var this_strike = this;
-        var models = require('../models');
-        var Promise = require("bluebird");
-        var resolver = Promise.pending();
 
-        models.Identity
-        .find({ where: { key: this.key } })
-        .then(function(identity) {
-          this_strike.set("identity_id", identity.id);
-          resolver.resolve(this_strike);
-        });
-        return resolver.promise;
-      },
+      filter: function() { return this.Model.filter(this); },
 
-      findAndSetDomain: function() {
-        var Promise = require("bluebird");
-        var resolver = Promise.pending();
-        var this_strike = this;
-        var models = require('../models');
-        var stringHelper = require('../helpers/string');
-        var domain_name = stringHelper.getDomainNameFromUrl(this_strike.url);
-
-        models.Domain
-        .find({ where: { name: domain_name } })
-        .then(function(domain) {
-          if (domain) {
-            this_strike.set("domain_id", domain.id);
-            resolver.resolve(this_strike);
-          } else {
-            models.Domain
-            .create({ name: domain_name })
-            .then(function(domain) {
-              resolver.resolve(this_strike);
-              this_strike.set("domain_id", domain.id);
-            });
-          }
-        });
-        return resolver.promise;
-      },
-
-      findAndSetReference: function() {
-        var Promise = require("bluebird");
-        var resolver = Promise.pending();
-        var this_strike = this;
-        var models = require('../models');
-        var stringHelper = require('../helpers/string');
-        var reference_url = stringHelper.cleanUrl(this_strike.url);
-
-        models.Reference
-        .find({ where: { url: reference_url } })
-        .then(function(reference) {
-          if (reference) {
-            this_strike.set("reference_id", reference.id);
-            resolver.resolve(this_strike);
-          } else {
-            models.Reference
-            .create({ url: reference_url })
-            .then(function(reference) {
-              this_strike.set("reference_id", reference.id);
-              resolver.resolve(this_strike);
-            });
-          }
-        });
-        return resolver.promise;
-      },
-
-      findAndSetAssociations: function() {
-        return this.findAndSetIdentity()
-        .then(function(strike) { return strike.findAndSetDomain(); })
-        .then(function(strike) { return strike.findAndSetReference(); });
-      },
-
-      likeMe: function(strike) {
-        var Promise = require("bluebird");
+      likeMe: function() {
         var this_strike = this;
         return new Promise(function(resolve){
-          this_strike.Model.find( { where: { reference_id: this_strike.reference_id, identity_id: this_strike.identity_id } } )
-          .then(function(strike){
-            resolve( strike );
+          this_strike.getIdentity()
+          .then(function(identity) {
+            this_strike.Model.findByKeyAndUrl( identity.key, this_strike.url )
+            .then(resolve);
+          });
+        });
+      },
+
+      createComment: function() {
+        var this_strike = this;
+        var models = require('../models');
+        return new Promise(function(resolve, reject){
+          resolve( this_strike.createComment({ text: this_strike._comment }) );
+        });
+      },
+
+      setIdentityFromKey: function() {
+        var this_strike = this;
+        var models = require('../models');
+        return new Promise(function(resolve, reject){
+          if ( !this_strike.key ) { reject('Invalid identity key.'); }
+          models.Identity.findByKey(this_strike.key)
+          .then(function(identity) {
+            if ( !identity ) { reject('Invalid identity key.'); }
+            else { this_strike.set("identity_id", identity.id); resolve(this_strike); }
+          });
+        });
+      },
+
+      setReferenceFromUrl: function() {
+        var this_strike = this;
+        var models = require('../models');
+        return new Promise(function(resolve, reject){
+          if ( !this_strike.url ) { reject('Could not set reference, missing url.'); }
+          models.Reference.findByUrl(this_strike.url)
+          .then(function(reference) {
+            if ( !reference ) {
+              models.Reference.create({url: this_strike.url})
+              .then(function(new_reference) { resolve(this_strike.set("reference_id", new_reference.id)); });
+            } else {
+              if ( reference.scored ) { reference.set("scored", false).save(); }
+              resolve(this_strike.set("reference_id", reference.id));
+            }
+          });
+        });
+      },
+
+      setDomainFromUrl: function() {
+        var this_strike = this;
+        var models = require('../models');
+        return new Promise(function(resolve, reject){
+          if ( !this_strike.url ) { reject('Could not set domain, missing url.'); }
+          models.Domain.findByUrl(this_strike.url)
+          .then(function(domain) {
+            if ( !domain ) {
+              models.Domain.create({name: this_strike.url})
+              .then(function(new_domain) { resolve(this_strike.set("domain_id", new_domain.id)); });
+            } else {
+              if ( domain.scored ) { domain.set("scored", false).save(); }
+              resolve(this_strike.set("domain_id", domain.id));
+            }
           });
         });
       },
 
       isUnique: function() {
+        var this_strike = this;
         return this.likeMe().then(function(strike) {
-          if ( strike ) { return false; } else { return true; }
+          if ( strike ) { return Promise.reject('You have already submitted this url.'); } else { return Promise.resolve(); }
         });
       }
     },
 
     hooks: {
-      afterCreate: function(strike) {
-        strike.getDomain().then(function(domain) { domain.updateTypeScore(strike.type).then(function(domain) { domain.updateCompositeScore(); }); });
-        strike.getReference().then(function(reference) { reference.updateTypeScore(strike.type).then(function(reference) { reference.updateCompositeScore(); }); });
-        strike.createComment( { text: strike._comment } );
+      beforeValidate: function(strike, options, callback) {
+        Promise.all([
+          strike.setIdentityFromKey()
+        ]).then(function() { callback(); }).catch(function(e) { callback(e); });
+      },
+
+      afterValidate: function(strike, options, callback) {
+        strike.isUnique().then(function() { callback(); }).catch(function(e) { callback(e); });
+      },
+
+      beforeCreate: function(strike, options, callback) {
+        Promise.all([
+          strike.setReferenceFromUrl(),
+          strike.setDomainFromUrl()
+        ]).then(function() { callback(); }).catch(function(e) { callback(e); });
+      },
+
+      afterCreate: function(strike, options, callback) {
+        strike.createComment( { text: strike._comment } ).then(function() { callback(); }).catch(function(e) { callback(e); });
+
+        var models = require('../models');
+        if ( strike._updateScores ) {
+          strike.getReference().then(models.Reference.updateScore);
+          strike.getDomain().then(models.Domain.updateScore);
+        }
       }
     },
 
     getterMethods: {
       key: function() { return this._key; },
+      comment: function(v) { return this._comment; },
+      updateScores: function(v) { return this._updateScores; }
     },
 
     setterMethods: {
       key: function(v) { this._key = v; },
       comment: function(v) { this._comment = v; },
+      updateScores: function(v) { this._updateScores = v; },
     },
 
     validate: {
-      isUnique: function() {
-        this.isUnique().then(function(uni){
-          if ( !uni ) { throw new Error('This Identity has already submitted this reference!'); }
-        });
-      }
     }
   });
 

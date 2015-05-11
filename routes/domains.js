@@ -3,6 +3,7 @@ var router = express.Router();
 var domainsController = require('../controllers/domains');
 
 /* GET strikes index. */
-router.get('/', domainsController.index);
+// router.get('/top', domainsController.top);
+// router.get('/find', domainsController.find);
 
 module.exports = router;

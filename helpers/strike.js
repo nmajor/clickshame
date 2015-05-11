@@ -1,19 +1,19 @@
 var models  = require('../models');
 
 module.exports = {
-  strikeCount: function(req) {
-    var max = 100;
-    var def = 10;
-    var count = req.query.count;
+  // strikeCount: function(req) {
+  //   var max = 100;
+  //   var def = 10;
+  //   var count = req.query.count;
 
-    if (!count) {
-      count = def;
-    } else if (count > max) {
-      count = max;
-    }
+  //   if (!count) {
+  //     count = def;
+  //   } else if (count > max) {
+  //     count = max;
+  //   }
 
-    return count;
-  },
+  //   return count;
+  // },
 
   recentStrikes: function(req, res, next) {
     var count = this.strikeCount(req);
@@ -27,20 +27,17 @@ module.exports = {
     });
   },
 
-  findStrike: function(req, res, next) {
-    var url = decodeURIComponent(req.body.url);
-    var key = req.body.key;
+  // findStrike: function(req, res, next) {
+  //   var url = decodeURIComponent(req.query.url);
+  //   var key = req.query.key;
 
-    var strike = models.Strike.build({
-      key: key,
-      url: url,
-    });
+  //   var strike = models.Strike.build({
+  //     key: key,
+  //     url: url,
+  //   });
 
-    strike.findAndSetAssociations()
-    .then(function(strike){
-      strike.likeMe().then(function(existing_strike) {
-        res.json(existing_strike);
-      });
-    });
-  }
+  //   strike.likeMe().then(function(existing_strike) {
+  //     if ( existing_strike ) { res.json(existing_strike); } else { res.json({}); }
+  //   });
+  // }
 };

@@ -20,9 +20,10 @@ module.exports = {
     count = this.referenceCount(req);
 
     models.Reference.findAll({
-      order: [['score', 'DESC']],
+      include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
+      order: '"Scores"."value" DESC',
       limit: count,
-      attributes: ["url", "score"]
+      attributes: ["url"]
     })
     .then(function(models) {
       res.json(models);

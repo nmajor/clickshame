@@ -6,11 +6,7 @@ module.exports = function(sequelize, DataTypes) {
     text: {
       type: DataTypes.TEXT,
       allowNull: false,
-    },
-    strike_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+    }
   }, {
     underscored: true,
     tableName: 'comments',
