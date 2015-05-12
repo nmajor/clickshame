@@ -13,6 +13,6 @@ module.exports = {
     });
   },
   sendError: function(res, code, message) {
-    res.status(code); res.json({ error: message });
+    res.status(code); res.json({ error: message.replace(/^Validation error:\s/, '') });
   }
 };

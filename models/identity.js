@@ -13,7 +13,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [['chrome']]
+        isIn:  {
+          args: [['chrome']],
+          msg: 'Invalid source parameter.'
+        }
       }
     },
     integrity: {

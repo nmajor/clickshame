@@ -1,4 +1,5 @@
 var models  = require('../models');
+var appHelper = require('../helpers/app');
 
 module.exports = {
 
@@ -10,8 +11,7 @@ module.exports = {
     .then(function(filtered_identity) {
       res.json(filtered_identity);
     })
-    .catch(Promise.OperationalError, function(e) { appHelper.sendError(res, 400, e.message); })
-    .catch(function(e) { appHelper.sendError(res, 400, e); });
+    .catch(function(e) { appHelper.sendError(res, 400, e.message); });
   },
 
 };
