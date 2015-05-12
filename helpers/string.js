@@ -20,9 +20,12 @@ module.exports = {
     return crypto.createHash('md5').update(string).digest("hex");
   },
   getCleanUrlHashFromUrl: function(url) {
-    this.stringToHash( this.cleanUrl(url) );
+    return this.stringToHash( this.cleanUrl(url) );
   },
   getDomainHashFromUrl: function(url) {
-    this.stringToHash( this.getDomainNameFromUrl(url) );
+    return this.stringToHash( this.getDomainNameFromUrl(url) );
+  },
+  getDomainHashFromDomain: function(domain) {
+    return this.stringToHash( domain.replace(/^www\./, '') );
   }
 };

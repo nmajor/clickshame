@@ -1,35 +1,22 @@
 var models  = require('../models');
-var domainHelper = require('../helpers/domain');
+var appHelper = require('../helpers/app');
 
 module.exports = {
-  index: function (req, res, next) {
-    if (req.query.urls || req.query.url) {
-      domainHelper.searchDomainsByUrl(req, res, next);
-    } else if (req.query.domains || req.query.domain) {
-      domainHelper.searchDomainsByDomain(req, res, next);
-    } else {
-      domainHelper.topDomains(req, res, next);
-    }
+  top: function (req, res, next) {
+    appHelper.getCount(req.query.count)
+    .then(models.Domain.top)
+    .then(function(domains) {
+      res.json(domains);
+    }).catch(function(e) { appHelper.sendError(res, 400, e); });
   },
 
-  // index: function (req, res, next) {
-  //   var max = 100;
-  //   var def = 10;
-  //   var count = req.query.count;
+  find: function (req, res, next) {
+    if ( !req.query.url && !req.query.urls && !req.query.hash && !req.query.hashes && !req.query.domain && !req.query.domains ) { appHelper.sendError(res, 400, 'Missing required parameters.'); return; }
 
-  //   if (!count) {
-  //     count = def;
-  //   } else if (count > max) {
-  //     count = max;
-  //   }
-
-  //   models.Domain.findAll({
-  //     order: [['score', 'DESC']],
-  //     limit: count,
-  //   })
-  //   .then(function(models) {
-  //     res.json(models);
-  //   });
-  // },
-
+    models.Domain.findFromQuery(req.query)
+    .then(models.Domain.filter)
+    .then(function(filtered_domain) {
+      res.json(filtered_domain);
+    });
+  }
 };

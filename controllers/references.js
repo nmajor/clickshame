@@ -11,7 +11,7 @@ module.exports = {
   },
 
   find: function (req, res, next) {
-    if ( !req.query.url && !req.query.urls && !req.query.hash ) { appHelper.sendError(res, 400, 'Missing required parameters.'); return; }
+    if ( !req.query.url && !req.query.urls && !req.query.hash && !req.query.hashes ) { appHelper.sendError(res, 400, 'Missing required parameters.'); return; }
 
     models.Reference.findFromQuery(req.query)
     .then(models.Reference.filter)

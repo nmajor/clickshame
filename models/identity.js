@@ -1,5 +1,6 @@
 /*jslint node: true */
 "use strict";
+var Promise = require('bluebird');
 
 module.exports = function(sequelize, DataTypes) {
   var Identity = sequelize.define("Identity", {
@@ -11,6 +12,9 @@ module.exports = function(sequelize, DataTypes) {
     source: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        isIn: [['chrome']]
+      }
     },
     integrity: {
       type: DataTypes.INTEGER,
@@ -28,33 +32,39 @@ module.exports = function(sequelize, DataTypes) {
 
       findByKey: function(key) {
         return Identity.find({ where: { key: key } });
+      },
+
+      allowedSources: function() { return ["chrome"]; },
+
+      filter: function(identity) {
+        return new Promise(function(resolve){
+          resolve({
+            key: identity.key,
+            source: identity.source
+          });
+        });
       }
     },
 
     instanceMethods: {
 
-      filter: function() {
-        var Promise = require("bluebird");
-        var this_identity = this;
-        return new Promise(function(resolve){
-          resolve({
-            key: this_identity.key,
-            source: this_identity.source
-          });
-        });
-      },
+      filter: function() { return this.Model.filter(this); },
 
       generateAndSetKey: function() {
         var stringHelper = require('../helpers/string');
-        if (!this.key) this.key = stringHelper.randomString(100);
-      },
+        var this_identity = this;
+        return new Promise(function(resolve){
+          if ( !this_identity.key ) { resolve( this_identity.set("key", stringHelper.randomString(50)) ); }
+        });
+      }
 
     },
 
     hooks: {
       beforeValidate: function(identity) {
         identity.generateAndSetKey();
-      },
+      }
+
     }
   });
 

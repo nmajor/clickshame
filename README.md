@@ -1,5 +1,5 @@
 NODE_ENV=development DEBUG=express:* ./bin/www
-NODE_ENV=test mocha
+NODE_ENV=test mocha --recursive
 NODE_ENV=production pm2 start ./bin/www
 
 API
@@ -49,9 +49,20 @@ http://joind.in/14022
 
 
 /strikes/recent
-/strikes/find
 /referenes/top
 /references/find
 /domains/top
 /domains/find
+
+
+Data to track
+identities created per day (already done)
+identities submitting at least one strike per day (already done)
+identities querying at least a few lists of urls per day (needed)
+
+Fraud prevention, make it so identities have to be submitting queries daily in order for their strikes to count
+
+
+
+
 

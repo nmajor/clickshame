@@ -20,7 +20,22 @@ describe('requests', function () {
         expect(body.id).to.not.be.ok;
         done();
       });
+    });
 
+    it('returns a 400 error if source is invalid', function(done){
+      var source = 'blah';
+      request.post({
+        url: 'http://localhost:3000/identities',
+        form: { source: source }
+      }, function (err, res, body){
+        console.log('identity body '+body);
+        expect(res.statusCode).to.equal(400);
+        body = JSON.parse(body);
+
+        expect(body.error).to.be.ok;
+        expect(body.error).to.equal('Invalid source parameter.');
+        done();
+      });
     });
 
   });

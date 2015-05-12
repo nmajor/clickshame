@@ -8,6 +8,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       unique: 'scorableIndex',
+      isIn: [['composite', 'misleading_title', 'misinformation', 'emotionally_manipulative' ]]
     },
     value: {
       type: DataTypes.INTEGER,

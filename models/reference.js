@@ -89,9 +89,10 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       findFromQuery: function(query) {
-        if ( query.hasOwnProperty('hash') ) {  }
-        else if ( query.hasOwnProperty('url') ) {  }
-        else if ( query.hasOwnProperty('urls') ) {  }
+        if ( query.hasOwnProperty('hash') ) { return Reference.findByHash(query.hash); }
+        else if ( query.hasOwnProperty('hashes') ) { return Reference.findByHashes(query.hashes); }
+        else if ( query.hasOwnProperty('url') ) { return Reference.findByUrl(query.url); }
+        else if ( query.hasOwnProperty('urls') ) { return Reference.findByUrls(query.urls); }
       },
 
       findByUrl: function(url) {
@@ -105,23 +106,28 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
-      findByUrls: function(urls) {
-        var stringHelper = require('../helpers/string');
-        var 
-
-        for(var i=0; i<urls.length; i++) {
-          urls[i] = stringHelper.getCleanUrlHashFromUrl(urls[i]);
-        }
-        Reference.findAll({
+      findByHashes: function(hashes) {
+        var models = require('../models');
+        return Reference.findAll({
           include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
-          where: { url: urls },
+          where: { url_hash: hashes },
           attributes: [ "url" ]
         });
+      },
+
+      findByUrls: function(urls) {
+        var models = require('../models');
+        var stringHelper = require('../helpers/string');
+        var hashes = [];
+
+        for(var i=0; i<urls.length; i++) {
+          hashes[i] = stringHelper.getCleanUrlHashFromUrl(urls[i]);
+          if ( i === (urls.length-1) ) { return Reference.findByHashes(hashes); }
+        }
       }
     },
 
     instanceMethods: {
-
       setUrlHash: function() {
         var this_reference = this;
         var url_hash = require('crypto').createHash('md5').update(this_reference.url).digest("hex");
