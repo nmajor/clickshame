@@ -28,7 +28,6 @@ describe('requests', function () {
         url: 'http://localhost:3000/identities',
         form: { source: source }
       }, function (err, res, body){
-        console.log('identity body '+body);
         expect(res.statusCode).to.equal(400);
         body = JSON.parse(body);
 

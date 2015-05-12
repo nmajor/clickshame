@@ -23,7 +23,7 @@ describe('requests', function () {
           url: 'http://localhost:3000/strikes',
           form: data
         }, function (err, res, body){
-          console.log('body ' + body);
+          console.log('blahstrike '+body);
           expect(res.statusCode).to.equal(200);
           body = JSON.parse(body);
 
@@ -46,7 +46,7 @@ describe('requests', function () {
 
     it('returns a 400 error when given an invalid identity key in post request', function(done){
       var data = {
-        key: 'jf802fn923i09fn83209fn80382n0fn83092n8f0329nupofyogfoiyhul',
+        key: 'GhcM92AQjotgUu9lzkwWJFWywjJIFDNmifdpsjfpadjFPmopdpsim',
         type: 'misleading_title',
         comment: 'this post sucks',
         url: 'http://www.create-strike-post-request-test.com/rubenguevara/how-many-of-these-fast-food-menu-items-have-you-tried#.ciX16mbAq'
@@ -66,7 +66,7 @@ describe('requests', function () {
 
     it('returns a 400 error when type is missing from post request', function(done){
       var data = {
-        key: 'jf802fn923i09fn83209fn80382n0fn83092n8f0329nupofyogfoiyhul',
+        key: 'GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo',
         comment: 'this post sucks',
         url: 'http://www.create-strike-post-request-test.com/rubenguevara/how-many-of-these-fast-food-menu-items-have-you-tried#.ciX16mbAq'
       };
@@ -104,7 +104,7 @@ describe('requests', function () {
 
     it('returns a 400 error when url is missing from post request', function(done){
       var data = {
-        key: 'jf802fn923i09fn83209fn80382n0fn83092n8f0329nupofyogfoiyhul',
+        key: 'GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo',
         type: 'misleading_title',
         comment: 'this post sucks',
       };
@@ -122,7 +122,7 @@ describe('requests', function () {
     });
 
     it('gets a list of most recent strikes no params', function(done){
-      request.get('http://localhost:3000/strikes/recent', function (err, res, body){
+      request.get('http://localhost:3000/strikes/recent?key=GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo', function (err, res, body){
         expect(res.statusCode).to.equal(200);
         body = JSON.parse(body);
         expect(body.length).to.equal(10);
@@ -131,7 +131,7 @@ describe('requests', function () {
     });
 
     it('gets a list of the 5 most recent strikes', function(done){
-      request.get('http://localhost:3000/strikes/recent?count=5', function (err, res, body){
+      request.get('http://localhost:3000/strikes/recent?key=GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo&count=5', function (err, res, body){
         expect(res.statusCode).to.equal(200);
         body = JSON.parse(body);
         expect(body.length).to.equal(5);

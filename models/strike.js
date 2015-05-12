@@ -172,10 +172,7 @@ module.exports = function(sequelize, DataTypes) {
         strike.createComment( { text: strike._comment } ).then(function() { callback(); }).catch(function(e) { callback(e); });
 
         var models = require('../models');
-        if ( strike._updateScores ) {
-          strike.getReference().then(models.Reference.updateScore);
-          strike.getDomain().then(models.Domain.updateScore);
-        }
+        if ( strike._updateScores ) { strike.getReference().then(models.Reference.updateScore); strike.getDomain().then(models.Domain.updateScore); }
       }
     },
 
@@ -191,8 +188,6 @@ module.exports = function(sequelize, DataTypes) {
       updateScores: function(v) { this._updateScores = v; },
     },
 
-    validate: {
-    }
   });
 
   return Strike;

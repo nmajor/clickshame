@@ -31,6 +31,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Identity.hasMany(models.Strike, { onDelete: 'cascade', hooks: true });
+        Identity.hasMany(models.Request, { onDelete: 'cascade', hooks: true });
       },
 
       findByKey: function(key) {
@@ -46,7 +47,16 @@ module.exports = function(sequelize, DataTypes) {
             source: identity.source
           });
         });
-      }
+      },
+
+      keyIsValid: function(key) {
+        return Identity.findByKey(key)
+        .then(function(identity) {
+          if ( !identity ) { return Promise.reject('Invalid identity key.'); }
+          else { return Promise.resolve(identity); }
+        });
+      },
+
     },
 
     instanceMethods: {

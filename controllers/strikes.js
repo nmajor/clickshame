@@ -7,10 +7,19 @@ var Promise = require('bluebird');
 
 module.exports = {
   recent: function(req, res, next) {
-    appHelper.getCount(req.query.count)
+    if ( !req.query.key ) { appHelper.sendError(res, 400, 'Missing identity key.'); return; }
+    var identity;
+
+    models.Identity.keyIsValid(req.query.key)
+    .then(function(id) {
+      identity = id;
+      return appHelper.getCount(req.query.count);
+    })
     .then(models.Strike.recent)
     .then(function(strikes) {
       res.json(strikes);
+
+      models.Request.logRequestFromReq(req, identity);
     }).catch(function(e) { appHelper.sendError(res, 400, e); });
   },
 
@@ -30,7 +39,9 @@ module.exports = {
       updateScores: true
     })
     .then(models.Strike.filter)
-    .then(function(filtered_strike) { res.json(filtered_strike); })
+    .then(function(filtered_strike) {
+      res.json(filtered_strike);
+    })
     .catch(Promise.OperationalError, function(e) { appHelper.sendError(res, 400, e.message); })
     .catch(function(e) { appHelper.sendError(res, 400, e); });
 
