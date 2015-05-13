@@ -98,8 +98,11 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       findByHash: function(hash) {
-        return new Promise(function(resolve, reject){
-          resolve( Domain.find({ where: { name_hash: hash } }) );
+        var models = require('../models');
+        return Domain.find({
+          include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
+          where: { name_hash: hash },
+          attributes: [ "name" ]
         });
       },
 
@@ -113,8 +116,13 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       findByUrl: function(url) {
+        var models = require('../models');
         var stringHelper = require('../helpers/string');
-        return Domain.find({ where: { name_hash: stringHelper.getDomainHashFromUrl(url) } });
+        return Domain.find({
+          include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
+          where: { name_hash: stringHelper.getDomainHashFromUrl(url) },
+          attributes: [ "name" ]
+        });
       },
 
       findByUrls: function(urls) {
@@ -129,8 +137,13 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       findByDomain: function(domain) {
+        var models = require('../models');
         var stringHelper = require('../helpers/string');
-        return Domain.find({ where: { name_hash: stringHelper.getDomainHashFromDomain(domain) } });
+        return Domain.find({
+          include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
+          where: { name_hash: stringHelper.getDomainHashFromDomain(domain) },
+          attributes: [ "name" ]
+        });
       },
 
       findByDomains: function(domains) {

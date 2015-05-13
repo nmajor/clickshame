@@ -24,9 +24,6 @@ module.exports = {
     if ( req.method === 'POST' ) { params = req.body; }
     else { params = req.query; }
 
-    console.log('blahparams1'+req.method+require('util').inspect(params));
-    console.log('blahparams2'+req.method+require('util').inspect(params.url));
-
     if ( !params.url && !params.urls && !params.hash && !params.hashes && !params.domain && !params.domains ) { appHelper.sendError(res, 400, 'Missing required parameters.'); return; }
     if ( !params.key ) { appHelper.sendError(res, 400, 'Missing identity key.'); return; }
     var identity;
@@ -36,9 +33,8 @@ module.exports = {
       identity = id;
       return models.Domain.findFromQuery(params);
     })
-    .then(models.Domain.filter)
-    .then(function(filtered_domain) {
-      res.json(filtered_domain);
+    .then(function(domain) {
+      res.json(domain);
 
       models.Request.logRequestFromReq(req, identity);
     });

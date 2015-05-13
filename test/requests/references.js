@@ -11,7 +11,6 @@ describe('requests', function () {
     it('gets a list of the top references with no params', function(done){
       request.get('http://localhost:3000/references/top?key=GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo', function (err, res, body){
         expect(res.statusCode).to.equal(200);
-        console.log('blahbody '+body);
         body = JSON.parse(body);
         expect(body.length).to.equal(10);
         done();
@@ -32,9 +31,25 @@ describe('requests', function () {
       var query = '?url='+url;
       query += '&key=GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo';
       request.get('http://localhost:3000/references/find'+query, function (err, res, body){
+        console.log('blahbody '+body);
         expect(res.statusCode).to.equal(200);
         body = JSON.parse(body);
         expect(body.url).to.equal(url);
+
+        expect(body.Scores).to.be.ok;
+        expect(body.Scores[0]).to.be.ok;
+        expect(body.Scores[0].type).to.be.ok;
+        expect(body.Scores[0].value).to.be.ok;
+
+        expect(body.Comments).to.be.ok;
+        expect(body.Comments[0]).to.be.ok;
+        expect(body.Comments[0].text).to.be.ok;
+
+        expect(body.id).to.not.be.ok;
+        expect(body.url_hash).to.not.be.ok;
+        expect(body.scored).to.not.be.ok;
+        expect(body.updated_at).to.not.be.ok;
+        expect(body.created_at).to.not.be.ok;
         done();
       });
     });

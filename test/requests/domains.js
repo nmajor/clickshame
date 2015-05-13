@@ -74,6 +74,17 @@ describe('requests', function () {
         expect(res.statusCode).to.equal(200);
         body = JSON.parse(body);
         expect(body.name).to.equal('mediaite.com');
+
+        expect(body.Scores).to.be.ok;
+        expect(body.Scores[0]).to.be.ok;
+        expect(body.Scores[0].type).to.be.ok;
+        expect(body.Scores[0].value).to.be.ok;
+
+        expect(body.id).to.not.be.ok;
+        expect(body.name_hash).to.not.be.ok;
+        expect(body.scored).to.not.be.ok;
+        expect(body.updated_at).to.not.be.ok;
+        expect(body.created_at).to.not.be.ok;
         done();
       });
     });

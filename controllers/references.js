@@ -33,9 +33,8 @@ module.exports = {
       identity = id;
       return models.Reference.findFromQuery(params);
     })
-    .then(models.Reference.filter)
-    .then(function(filtered_reference) {
-      res.json(filtered_reference);
+    .then(function(reference) {
+      res.json(reference);
 
       models.Request.logRequestFromReq(req, identity);
     });

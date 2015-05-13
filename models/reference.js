@@ -29,6 +29,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Reference.hasMany(models.Strike, { onDelete: 'cascade', hooks: true });
+        Reference.hasMany(models.Comment, { onDelete: 'cascade', hooks: true } );
         Reference.hasMany(models.Score, {
           foreignKey: 'scorable_id',
           scope: {
@@ -96,13 +97,24 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       findByUrl: function(url) {
+        var models = require('../models');
         var stringHelper = require('../helpers/string');
-        return Reference.find({ where: { url_hash: stringHelper.getCleanUrlHashFromUrl(url) } });
+        return Reference.find({
+          include: [
+            { model: models.Score, attributes: [ 'type', 'value' ] },
+            { model: models.Comment, attributes: [ 'text' ], order: [[ "id", "DESC" ]], limit: 5 }
+          ],
+          where: { url_hash: stringHelper.getCleanUrlHashFromUrl(url) },
+          attributes: [ "url" ]
+        });
       },
 
       findByHash: function(hash) {
-        return new Promise(function(resolve, reject){
-          resolve( Reference.find({ where: { url_hash: hash } }) );
+        var models = require('../models');
+        return Reference.find({
+          include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
+          where: { url_hash: hash },
+          attributes: [ "url" ]
         });
       },
 

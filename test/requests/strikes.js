@@ -23,12 +23,10 @@ describe('requests', function () {
           url: 'http://localhost:3000/strikes',
           form: data
         }, function (err, res, body){
-          console.log('blahstrike '+body);
           expect(res.statusCode).to.equal(200);
           body = JSON.parse(body);
 
           expect(body.type).to.equal(data.type);
-          expect(body.comment).to.equal(data.comment);
           expect(body.url).to.equal(data.url);
 
           expect(body.created_at).to.be.ok;

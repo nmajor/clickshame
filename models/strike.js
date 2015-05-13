@@ -26,7 +26,6 @@ module.exports = function(sequelize, DataTypes) {
         Strike.belongsTo(models.Identity);
         Strike.belongsTo(models.Reference);
         Strike.belongsTo(models.Domain);
-        Strike.hasOne(models.Comment, { onDelete: 'cascade', hooks: true } );
       },
 
       recent: function(count) {
@@ -53,18 +52,11 @@ module.exports = function(sequelize, DataTypes) {
 
       filter: function(strike) {
         if ( !strike ) { return new Promise(function(resolve){ resolve(''); }); }
-        return strike.getComment()
-        .then(function(comment) {
-          return new Promise(function(resolve){
-            var comment_text = '';
-            if ( comment ) { comment_text = comment.text; }
-
-            resolve({
-              type: strike.type,
-              comment: comment_text,
-              url: strike.url,
-              created_at: strike.created_at,
-            });
+        return new Promise(function(resolve){
+          resolve({
+            type: strike.type,
+            url: strike.url,
+            created_at: strike.created_at,
           });
         });
       }
@@ -88,9 +80,8 @@ module.exports = function(sequelize, DataTypes) {
       createComment: function() {
         var this_strike = this;
         var models = require('../models');
-        return new Promise(function(resolve, reject){
-          resolve( this_strike.createComment({ text: this_strike._comment }) );
-        });
+        return this_strike.getReference()
+        .then(function(reference) { reference.createComment({ text: this_strike._comment }); });
       },
 
       setIdentityFromKey: function() {
@@ -109,9 +100,11 @@ module.exports = function(sequelize, DataTypes) {
       setReferenceFromUrl: function() {
         var this_strike = this;
         var models = require('../models');
+        var stringHelper = require('../helpers/string');
+
         return new Promise(function(resolve, reject){
           if ( !this_strike.url ) { reject('Could not set reference, missing url.'); }
-          models.Reference.findByUrl(this_strike.url)
+          models.Reference.find({ where: { url_hash: stringHelper.getCleanUrlHashFromUrl(this_strike.url) } })
           .then(function(reference) {
             if ( !reference ) {
               models.Reference.create({url: this_strike.url})
@@ -127,9 +120,11 @@ module.exports = function(sequelize, DataTypes) {
       setDomainFromUrl: function() {
         var this_strike = this;
         var models = require('../models');
+        var stringHelper = require('../helpers/string');
+
         return new Promise(function(resolve, reject){
           if ( !this_strike.url ) { reject('Could not set domain, missing url.'); }
-          models.Domain.findByUrl(this_strike.url)
+          models.Domain.find({ where: { name_hash: stringHelper.getDomainHashFromUrl(this_strike.url) } })
           .then(function(domain) {
             if ( !domain ) {
               models.Domain.create({name: this_strike.url})

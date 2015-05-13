@@ -41,7 +41,12 @@ drop table "SequelizeMeta","comments","domains","identities","references","score
 NODE_ENV=test node ./scripts/dbsync.js
 NODE_ENV=test sequelize db:migrate
 
+var models = require('./models');
+models.Domain.updateScores();
+models.Reference.updateScores();
 
+NODE_ENV=development node ./scripts/dbsync.js
+NODE_ENV=development sequelize db:migrate
 
 resolve, reject
 
