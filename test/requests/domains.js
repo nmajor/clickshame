@@ -48,6 +48,25 @@ describe('requests', function () {
       });
     });
 
+    it('gets a domain from URL with POST request', function(done){
+      var url = 'http://mediaite.com/tv/comet-scientist-breaks-down-in-tears-apologizing-for-sexist-shirt';
+
+      var data = {
+        key: 'GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo',
+        url: url
+      };
+
+      request.post({
+        url: 'http://localhost:3000/domains/find',
+        form: data
+      }, function (err, res, body){
+        expect(res.statusCode).to.equal(200);
+        body = JSON.parse(body);
+        expect(body.name).to.equal('mediaite.com');
+        done();
+      });
+    });
+
     it('gets a domain from domain', function(done){
       var query = '?domain='+encodeURIComponent('mediaite.com');
       query += '&key=GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo'
@@ -86,6 +105,36 @@ describe('requests', function () {
       request.get('http://localhost:3000/domains/find'+query, function (err, res, body){
         expect(res.statusCode).to.equal(200);
         body = JSON.parse(body);
+        expect(body.length).to.equal(6);
+        expect(body[0].name).to.be.ok;
+        expect(body[0].Scores).to.be.ok;
+        expect(body[0].Scores[0].type).to.be.ok;
+        expect(body[0].Scores[0].value).to.be.ok;
+        done();
+      });
+    });
+
+    it('gets a domains from an array of URLs with a POST request', function(done){
+      var data = {
+        urls: [
+          'http://mashable.com/2014/11/13/esa-scientist-sexist-shirt/',
+          'http://distractify.com/jake-heppner/scenes-from-the-past-you-never-expected-never-seen-before/',
+          'http://www.mediaite.com/tv/comet-scientist-breaks-down-in-tears-apologizing-for-sexist-shirt/',
+          'http://www.huffingtonpost.com/thomas-church/ryan-holiday-trust-me-im-lying_b_1715524.html',
+          'http://www.huffingtonpost.com/peggy-drexler/-will-we-ever-get-along-again_b_7162050.html',
+          'http://www.upworthy.com/youve-seen-these-works-of-art-but-youve-probably-never-seen-them-gluten-free-feast-your-eyes?c=hpstream',
+          'http://www.upworthy.com/a-condom-fundraising-video-that-has-it-all-unicorns-two-goofy-german-guys-and-hilarious-visuals?c=reccon1',
+          'http://www.buzzfeed.com/clairedelouraille/insanely-adorable-knitted-creatures#.qvmQNnL5X',
+          'http://www.buzzfeed.com/candacelowry/these-buddies-in-china-live-their-lives-according-to-friends#.kmR9NZ6gV' ],
+        key: 'GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo'
+      };
+
+      request.post({
+        url: 'http://localhost:3000/domains/find',
+        json: data,
+      }, function (err, res, body){
+        expect(res.statusCode).to.equal(200);
+        if ( typeof(body) === 'string' ) { body = JSON.parse(body); }
         expect(body.length).to.equal(6);
         expect(body[0].name).to.be.ok;
         expect(body[0].Scores).to.be.ok;

@@ -45,14 +45,17 @@ NODE_ENV=test sequelize db:migrate
 
 resolve, reject
 
-http://joind.in/14022
-
-
+GET paths
 /strikes/recent
 /referenes/top
 /references/find
 /domains/top
 /domains/find
+
+POST paths
+/strikes
+/identities
+
 
 
 Data to track

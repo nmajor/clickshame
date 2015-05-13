@@ -1,0 +1,13 @@
+Make strike calculation only include strikes who's identity has an integrity score of X
+
+not_worth_click
+misleading_title
+pretty_good
+
+
+Add mutation observer for extension
+Make extension utilize hashes for its requests
+Make extension use post for all its requests
+Internationalization
+Give the tooltip a makeover
+

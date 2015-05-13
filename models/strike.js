@@ -152,9 +152,11 @@ module.exports = function(sequelize, DataTypes) {
 
     hooks: {
       beforeValidate: function(strike, options, callback) {
-        Promise.all([
-          strike.setIdentityFromKey()
-        ]).then(function() { callback(); }).catch(function(e) { callback(e); });
+        if ( !strike.identity_id ) {
+          Promise.all([
+            strike.setIdentityFromKey()
+          ]).then(function() { callback(); }).catch(function(e) { callback(e); });
+        } else { callback(); }
       },
 
       afterValidate: function(strike, options, callback) {

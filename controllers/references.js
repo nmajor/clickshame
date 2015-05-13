@@ -20,14 +20,18 @@ module.exports = {
   },
 
   find: function (req, res, next) {
-    if ( !req.query.url && !req.query.urls && !req.query.hash && !req.query.hashes ) { appHelper.sendError(res, 400, 'Missing required parameters.'); return; }
-    if ( !req.query.key ) { appHelper.sendError(res, 400, 'Missing identity key.'); return; }
+    var params;
+    if ( req.method === 'POST' ) { params = req.body; }
+    else { params = req.query; }
+
+    if ( !params.url && !params.urls && !params.hash && !params.hashes ) { appHelper.sendError(res, 400, 'Missing required parameters.'); return; }
+    if ( !params.key ) { appHelper.sendError(res, 400, 'Missing identity key.'); return; }
     var identity;
 
-    models.Identity.keyIsValid(req.query.key)
+    models.Identity.keyIsValid(params.key)
     .then(function(id) {
       identity = id;
-      return models.Reference.findFromQuery(req.query);
+      return models.Reference.findFromQuery(params);
     })
     .then(models.Reference.filter)
     .then(function(filtered_reference) {

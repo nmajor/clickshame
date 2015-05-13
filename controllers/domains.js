@@ -5,7 +5,6 @@ module.exports = {
   top: function (req, res, next) {
     if ( !req.query.key ) { appHelper.sendError(res, 400, 'Missing identity key.'); return; }
     var identity;
-    console.log('heyblah1');
 
     models.Identity.keyIsValid(req.query.key)
     .then(function(id) {
@@ -21,14 +20,21 @@ module.exports = {
   },
 
   find: function (req, res, next) {
-    if ( !req.query.url && !req.query.urls && !req.query.hash && !req.query.hashes && !req.query.domain && !req.query.domains ) { appHelper.sendError(res, 400, 'Missing required parameters.'); return; }
-    if ( !req.query.key ) { appHelper.sendError(res, 400, 'Missing identity key.'); return; }
+    var params;
+    if ( req.method === 'POST' ) { params = req.body; }
+    else { params = req.query; }
+
+    console.log('blahparams1'+req.method+require('util').inspect(params));
+    console.log('blahparams2'+req.method+require('util').inspect(params.url));
+
+    if ( !params.url && !params.urls && !params.hash && !params.hashes && !params.domain && !params.domains ) { appHelper.sendError(res, 400, 'Missing required parameters.'); return; }
+    if ( !params.key ) { appHelper.sendError(res, 400, 'Missing identity key.'); return; }
     var identity;
 
-    models.Identity.keyIsValid(req.query.key)
+    models.Identity.keyIsValid(params.key)
     .then(function(id) {
       identity = id;
-      return models.Domain.findFromQuery(req.query);
+      return models.Domain.findFromQuery(params);
     })
     .then(models.Domain.filter)
     .then(function(filtered_domain) {
