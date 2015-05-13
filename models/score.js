@@ -44,13 +44,17 @@ module.exports = function(sequelize, DataTypes) {
         return models.Strike.count({ where: wheres });
       },
 
-      findAndSetValue: function(scorable, scorable_id, type, value) {
-        Score.findOrCreate({
-          where: {
-            scorable: scorable,
-            scorable_id: scorable_id,
-            type: type
-          }, defaults: { value: 0 } }).spread(function(score, created) { score.set('value', value).save(); });
+      findAndSetValue: function(scorable, scorable_id, type, value, scores) {
+        if ( value > 0 ) {
+          return Score.findOrCreate({
+            where: {
+              scorable: scorable,
+              scorable_id: scorable_id,
+              type: type
+            }, defaults: { value: 0 }
+          })
+          .spread(function(score, created) { score.set('value', value).save(); });
+        } else { return Promise.resolve(); }
       },
 
       calculateAndAddCompositeScore: function(scores) {

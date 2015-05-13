@@ -80,8 +80,10 @@ module.exports = function(sequelize, DataTypes) {
       createComment: function() {
         var this_strike = this;
         var models = require('../models');
-        return this_strike.getReference()
-        .then(function(reference) { reference.createComment({ text: this_strike._comment }); });
+        if ( this_strike._comment.length > 0 ) {
+          return this_strike.getReference()
+          .then(function(reference) { reference.createComment({ text: this_strike._comment }); });
+        } else { return Promise.resolve(); }
       },
 
       setIdentityFromKey: function() {
@@ -169,7 +171,11 @@ module.exports = function(sequelize, DataTypes) {
         strike.createComment( { text: strike._comment } ).then(function() { callback(); }).catch(function(e) { callback(e); });
 
         var models = require('../models');
-        if ( strike._updateScores ) { strike.getReference().then(models.Reference.updateScore); strike.getDomain().then(models.Domain.updateScore); }
+        if ( strike._updateScores ) {
+          strike.getReference().then(models.Reference.updateScore)
+          .then(function() { strike.getDomain().then(models.Domain.updateScore); })
+          .catch(function(e) { console.log('blahfuck '+require('util').inspect(e)); });
+        }
       }
     },
 

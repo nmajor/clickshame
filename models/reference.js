@@ -37,7 +37,6 @@ module.exports = function(sequelize, DataTypes) {
           },
           constraints: false,
           hooks: true,
-          onDelete: 'cascade'
         });
       },
 
@@ -68,11 +67,14 @@ module.exports = function(sequelize, DataTypes) {
         var models = require('../models');
         Reference.countScores(reference)
         .then(function(scores) {
-          if ( scores.misleading_title > 0 ) { models.Score.findAndSetValue( 'reference', reference.id, 'misleading_title', scores.misleading_title ); }
-          if ( scores.misinformation > 0 ) { models.Score.findAndSetValue( 'reference', reference.id, 'misinformation', scores.misinformation ); }
-          if ( scores.emotionally_manipulative > 0 ) { models.Score.findAndSetValue( 'reference', reference.id, 'emotionally_manipulative', scores.emotionally_manipulative ); }
-          models.Score.findAndSetValue( 'reference', reference.id, 'composite', scores.composite );
-          reference.set('scored', true).save();
+          Promise.all([
+            models.Score.findAndSetValue( 'reference', reference.id, 'misleading_title', scores.misleading_title ),
+            models.Score.findAndSetValue( 'reference', reference.id, 'misinformation', scores.misinformation ),
+            models.Score.findAndSetValue( 'reference', reference.id, 'emotionally_manipulative', scores.emotionally_manipulative ),
+          ])
+          .then(function() { models.Score.findAndSetValue( 'reference', reference.id, 'composite', scores.composite ); })
+          .then(function() { reference.set('scored', true).save(); })
+          .catch(function(e) { console.log('Something went wrong saving the scores'+require('util').inspect(e)); });
         });
       },
 

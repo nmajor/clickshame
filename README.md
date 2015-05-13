@@ -48,6 +48,9 @@ models.Reference.updateScores();
 NODE_ENV=development node ./scripts/dbsync.js
 NODE_ENV=development sequelize db:migrate
 
+NODE_ENV=production node ./scripts/dbsync.js
+NODE_ENV=production sequelize db:migrate
+
 resolve, reject
 
 GET paths

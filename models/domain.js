@@ -36,7 +36,6 @@ module.exports = function(sequelize, DataTypes) {
           },
           constraints: false,
           hooks: true,
-          onDelete: 'cascade'
         });
       },
 
@@ -72,6 +71,15 @@ module.exports = function(sequelize, DataTypes) {
           if ( scores.emotionally_manipulative > 0 ) { models.Score.findAndSetValue( 'domain', domain.id, 'emotionally_manipulative', scores.emotionally_manipulative ); }
           models.Score.findAndSetValue( 'domain', domain.id, 'composite', scores.composite );
           domain.set('scored', true).save();
+
+          Promise.all([
+            models.Score.findAndSetValue( 'domain', domain.id, 'misleading_title', scores.misleading_title ),
+            models.Score.findAndSetValue( 'domain', domain.id, 'misinformation', scores.misinformation ),
+            models.Score.findAndSetValue( 'domain', domain.id, 'emotionally_manipulative', scores.emotionally_manipulative ),
+          ])
+          .then(function() { models.Score.findAndSetValue( 'domain', domain.id, 'composite', scores.composite ); })
+          .then(function() { domain.set('scored', true).save(); })
+          .catch(function(e) { console.log('Something went wrong saving the scores'+require('util').inspect(e)); });
         });
       },
 
