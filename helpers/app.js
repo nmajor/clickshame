@@ -14,6 +14,9 @@ module.exports = {
   },
   sendError: function(res, code, message) {
     console.log('ERROR: '+require('util').inspect(message));
+
+    if ( typeof(message) === 'object' ) { message = message.message; }
+
     res.status(code); res.json({ error: message.replace(/^Validation error:\s/, '') });
   }
 };

@@ -66,16 +66,18 @@ module.exports = function(sequelize, DataTypes) {
         var models = require('../models');
         Domain.countScores(domain)
         .then(function(scores) {
-          if ( scores.misleading_title > 0 ) { models.Score.findAndSetValue( 'domain', domain.id, 'misleading_title', scores.misleading_title ); }
-          if ( scores.misinformation > 0 ) { models.Score.findAndSetValue( 'domain', domain.id, 'misinformation', scores.misinformation ); }
-          if ( scores.emotionally_manipulative > 0 ) { models.Score.findAndSetValue( 'domain', domain.id, 'emotionally_manipulative', scores.emotionally_manipulative ); }
+          // if ( scores.misleading_title > 0 ) { models.Score.findAndSetValue( 'domain', domain.id, 'misleading_title', scores.misleading_title ); }
+          // if ( scores.misinformation > 0 ) { models.Score.findAndSetValue( 'domain', domain.id, 'misinformation', scores.misinformation ); }
+          // if ( scores.emotionally_manipulative > 0 ) { models.Score.findAndSetValue( 'domain', domain.id, 'emotionally_manipulative', scores.emotionally_manipulative ); }
+          if ( scores.clickbait > 0 ) { models.Score.findAndSetValue( 'domain', domain.id, 'clickbait', scores.emotionally_manipulative ); }
           models.Score.findAndSetValue( 'domain', domain.id, 'composite', scores.composite );
           domain.set('scored', true).save();
 
           Promise.all([
-            models.Score.findAndSetValue( 'domain', domain.id, 'misleading_title', scores.misleading_title ),
-            models.Score.findAndSetValue( 'domain', domain.id, 'misinformation', scores.misinformation ),
-            models.Score.findAndSetValue( 'domain', domain.id, 'emotionally_manipulative', scores.emotionally_manipulative ),
+            // models.Score.findAndSetValue( 'domain', domain.id, 'misleading_title', scores.misleading_title ),
+            // models.Score.findAndSetValue( 'domain', domain.id, 'misinformation', scores.misinformation ),
+            // models.Score.findAndSetValue( 'domain', domain.id, 'emotionally_manipulative', scores.emotionally_manipulative ),
+            models.Score.findAndSetValue( 'domain', domain.id, 'clickbait', scores.clickbait ),
           ])
           .then(function() { models.Score.findAndSetValue( 'domain', domain.id, 'composite', scores.composite ); })
           .then(function() { domain.set('scored', true).save(); })
@@ -86,12 +88,14 @@ module.exports = function(sequelize, DataTypes) {
       countScores: function(domain) {
         var models = require('../models');
         return Promise.all([
-          models.Score.countScore('domain', domain.id, 'misleading_title'),
-          models.Score.countScore('domain', domain.id, 'misinformation'),
-          models.Score.countScore('domain', domain.id, 'emotionally_manipulative')
+          // models.Score.countScore('domain', domain.id, 'misleading_title'),
+          // models.Score.countScore('domain', domain.id, 'misinformation'),
+          // models.Score.countScore('domain', domain.id, 'emotionally_manipulative')
+          models.Score.countScore('domain', domain.id, 'clickbait')
         ])
         .then(function(result) {
-          return Promise.resolve({ misleading_title: result[0], misinformation: result[1], emotionally_manipulative: result[2] });
+          // return Promise.resolve({ misleading_title: result[0], misinformation: result[1], emotionally_manipulative: result[2] });
+          return Promise.resolve({ clickbait: result[0] });
         })
         .then(models.Score.calculateAndAddCompositeScore).then(function(scores) { return scores; });
       },

@@ -68,9 +68,10 @@ module.exports = function(sequelize, DataTypes) {
         Reference.countScores(reference)
         .then(function(scores) {
           Promise.all([
-            models.Score.findAndSetValue( 'reference', reference.id, 'misleading_title', scores.misleading_title ),
-            models.Score.findAndSetValue( 'reference', reference.id, 'misinformation', scores.misinformation ),
-            models.Score.findAndSetValue( 'reference', reference.id, 'emotionally_manipulative', scores.emotionally_manipulative ),
+            // models.Score.findAndSetValue( 'reference', reference.id, 'misleading_title', scores.misleading_title ),
+            // models.Score.findAndSetValue( 'reference', reference.id, 'misinformation', scores.misinformation ),
+            // models.Score.findAndSetValue( 'reference', reference.id, 'emotionally_manipulative', scores.emotionally_manipulative ),
+            models.Score.findAndSetValue( 'reference', reference.id, 'clickbait', scores.clickbait ),
           ])
           .then(function() { models.Score.findAndSetValue( 'reference', reference.id, 'composite', scores.composite ); })
           .then(function() { reference.set('scored', true).save(); })
@@ -81,12 +82,14 @@ module.exports = function(sequelize, DataTypes) {
       countScores: function(reference) {
         var models = require('../models');
         return Promise.all([
-          models.Score.countScore('reference', reference.id, 'misleading_title'),
-          models.Score.countScore('reference', reference.id, 'misinformation'),
-          models.Score.countScore('reference', reference.id, 'emotionally_manipulative')
+          // models.Score.countScore('reference', reference.id, 'misleading_title'),
+          // models.Score.countScore('reference', reference.id, 'misinformation'),
+          // models.Score.countScore('reference', reference.id, 'emotionally_manipulative')
+          models.Score.countScore('reference', reference.id, 'clickbait')
         ])
         .then(function(result) {
-          return Promise.resolve({ misleading_title: result[0], misinformation: result[1], emotionally_manipulative: result[2] });
+          // return Promise.resolve({ misleading_title: result[0], misinformation: result[1], emotionally_manipulative: result[2] });
+          return Promise.resolve({ clickbait: result[0] });
         })
         .then(models.Score.calculateAndAddCompositeScore).then(function(scores) { return scores; });
       },

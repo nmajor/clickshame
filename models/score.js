@@ -8,7 +8,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       unique: 'scorableIndex',
-      isIn: [['composite', 'misleading_title', 'misinformation', 'emotionally_manipulative' ]]
+      // isIn: [['composite', 'misleading_title', 'misinformation', 'emotionally_manipulative' ]]
+      isIn: {
+        args: [['composite', 'clickbait' ]],
+        msg: 'Invalid score type.'
+      }
     },
     value: {
       type: DataTypes.INTEGER,
@@ -29,7 +33,8 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'scores',
 
     classMethods: {
-      allowedTypes: function() { return ['composite', 'misleading_title', 'misinformation', 'emotionally_manipulative']; },
+      // allowedTypes: function() { return ['composite', 'misleading_title', 'misinformation', 'emotionally_manipulative']; },
+      allowedTypes: function() { return ['composite', 'clickbait']; },
       associate: function(models) {
         Score.belongsTo(models.Reference, { foreignKey: 'scorable_id', as: 'Reference', constraints: false });
         Score.belongsTo(models.Domain, { foreignKey: 'scorable_id', as: 'Domain', constraints: false });
@@ -59,7 +64,8 @@ module.exports = function(sequelize, DataTypes) {
 
       calculateAndAddCompositeScore: function(scores) {
         return new Promise(function(resolve, reject){
-          scores.composite = scores.misleading_title + scores.misinformation + scores.emotionally_manipulative;
+          // scores.composite = scores.misleading_title + scores.misinformation + scores.emotionally_manipulative;
+          scores.composite = scores.clickbait;
           resolve(scores);
         });
       }

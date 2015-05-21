@@ -12,7 +12,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [ ['misleading_title', 'misinformation', 'emotionally_manipulative'] ]
+        // isIn: [ ['misleading_title', 'misinformation', 'emotionally_manipulative', 'clickbait'] ]
+        isIn: {
+          args: [['clickbait' ]],
+          msg: 'Invalid strike type.'
+        }
       }
     }
   }, {

@@ -14,7 +14,7 @@ describe('requests', function () {
       .then(function (identity) {
         var data = {
           key: identity.key,
-          type: 'misleading_title',
+          type: 'clickbait',
           comment: 'this post sucks',
           url: 'http://www.create-strike-post-request-test3.com/rubenguevara/how-many-of-these-fast-food-menu-items-have-you-tried#.ciX16mbAq'
         };
@@ -42,10 +42,30 @@ describe('requests', function () {
       });
     });
 
+    it('returns a 400 error when type is invalid', function(done){
+      var data = {
+        key: 'GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo',
+        comment: 'this post sucks',
+        type: 'blah',
+        url: 'http://www.create-strike-post-request-test.com/rubenguevara/how-many-of-these-fast-food-menu-items-have-you-tried#.ciX16mbAq'
+      };
+
+      request.post({
+        url: 'http://localhost:3000/strikes',
+        form: data
+      }, function (err, res, body){
+        expect(res.statusCode).to.equal(400);
+        body = JSON.parse(body);
+        expect(body.error).to.be.ok;
+        expect(body.error).to.equal('Invalid strike type.');
+        done();
+      });
+    });
+
     it('returns a 400 error when given an invalid identity key in post request', function(done){
       var data = {
         key: 'GhcM92AQjotgUu9lzkwWJFWywjJIFDNmifdpsjfpadjFPmopdpsim',
-        type: 'misleading_title',
+        type: 'clickbait',
         comment: 'this post sucks',
         url: 'http://www.create-strike-post-request-test.com/rubenguevara/how-many-of-these-fast-food-menu-items-have-you-tried#.ciX16mbAq'
       };
@@ -83,7 +103,7 @@ describe('requests', function () {
 
     it('returns a 400 error when key is missing from post request', function(done){
       var data = {
-        type: 'misleading_title',
+        type: 'clickbait',
         comment: 'this post sucks',
         url: 'http://www.create-strike-post-request-test.com/rubenguevara/how-many-of-these-fast-food-menu-items-have-you-tried#.ciX16mbAq'
       };
@@ -103,7 +123,7 @@ describe('requests', function () {
     it('returns a 400 error when url is missing from post request', function(done){
       var data = {
         key: 'GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo',
-        type: 'misleading_title',
+        type: 'clickbait',
         comment: 'this post sucks',
       };
 
@@ -143,7 +163,7 @@ describe('requests', function () {
 
         var data = {
           key: strike.Identity.key,
-          type: 'misleading_title',
+          type: 'clickbait',
           comment: 'this post sucks',
           url: encodeURIComponent(strike.url)
         };
