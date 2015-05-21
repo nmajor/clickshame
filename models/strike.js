@@ -80,7 +80,7 @@ module.exports = function(sequelize, DataTypes) {
       createComment: function() {
         var this_strike = this;
         var models = require('../models');
-        if ( this_strike._comment.length > 0 ) {
+        if ( /\S/.test(this_strike._comment) ) {
           return this_strike.getReference()
           .then(function(reference) { reference.createComment({ text: this_strike._comment }); });
         } else { return Promise.resolve(); }
