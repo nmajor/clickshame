@@ -105,7 +105,14 @@ module.exports = function(sequelize, DataTypes) {
         var models = require('../models');
         var urlHelper = require('../helpers/url');
 
-        return urlHelper.pickyLongUrlToHash(url).then(Reference.findByHash);
+        return urlHelper.pickyLongUrlToHash(url)
+        .then(function(longResult) {
+          return Reference.findByHash(longResult.hash)
+          .then(function(reference) {
+            reference.url = longResult.originalUrl;
+            return reference;
+          });
+        });
       },
 
       findByHash: function(hash) {
@@ -137,7 +144,30 @@ module.exports = function(sequelize, DataTypes) {
         var urlHelper = require('../helpers/url');
         var hashes = [];
 
-        return urlHelper.longUrlsToHashes(urls).then(Reference.findByHashes);
+        return urlHelper.longUrlsToHashes(urls).then(function(longResults) {
+          hashes = longResults.map(function(result) { return result.hash; });
+
+          return Reference.findByHashes(hashes)
+          .then(function(references) {
+            return Reference.reconsileShortUrls(references, longResults);
+          });
+        });
+      },
+
+      reconsileShortUrls: function(references, longResults) {
+        return new Promise(function(resolve){
+          references.map(function(reference) {
+            var longFiltered = longResults.filter(function(result) { return result.hash === reference.url_hash && result.diff === true; });
+            if ( longFiltered.length === 0 ) { resolve( references ); }
+            else {
+              longFiltered.forEach(function(diffResult, index, array) {
+                reference.url = diffResult.originalUrl;
+              });
+              resolve( references );
+            }
+
+          });
+        });
       }
     },
 

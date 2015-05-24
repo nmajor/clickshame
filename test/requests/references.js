@@ -53,6 +53,33 @@ describe('requests', function () {
       });
     });
 
+    it('gets a reference from a short URL returns the short url with the score of the long URL', function(done){
+      var url = 'bit.ly/1Hgx3pg';
+      var query = '?url='+url;
+      query += '&key=GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo';
+      request.get('http://localhost:3000/references/find'+query, function (err, res, body){
+        expect(res.statusCode).to.equal(200);
+        body = JSON.parse(body);
+        expect(body.url).to.equal(url);
+
+        expect(body.Scores).to.be.ok;
+        expect(body.Scores[0]).to.be.ok;
+        expect(body.Scores[0].type).to.be.ok;
+        expect(body.Scores[0].value).to.be.above(0);
+
+        expect(body.Comments).to.be.ok;
+        expect(body.Comments[0]).to.be.ok;
+        expect(body.Comments[0].text).to.be.ok;
+
+        expect(body.id).to.not.be.ok;
+        expect(body.url_hash).to.not.be.ok;
+        expect(body.scored).to.not.be.ok;
+        expect(body.updated_at).to.not.be.ok;
+        expect(body.created_at).to.not.be.ok;
+        done();
+      });
+    });
+
     it('gets a reference from URL with a POST request', function(done){
       var url = 'mediaite.com/tv/comet-scientist-breaks-down-in-tears-apologizing-for-sexist-shirt';
 
@@ -99,6 +126,8 @@ describe('requests', function () {
       request.get('http://localhost:3000/references/find'+query, function (err, res, body){
         expect(res.statusCode).to.equal(200);
         body = JSON.parse(body);
+        console.log('blah1');
+        console.log(body);
         expect(body.length).to.equal(4);
         expect(body[0].url).to.be.ok;
         expect(body[0].Scores).to.be.ok;
