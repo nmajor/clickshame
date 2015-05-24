@@ -103,44 +103,41 @@ module.exports = function(sequelize, DataTypes) {
 
       findByUrl: function(url) {
         var models = require('../models');
-        var stringHelper = require('../helpers/string');
-        return Reference.find({
-          include: [
-            { model: models.Score, attributes: [ 'type', 'value' ] },
-            { model: models.Comment, attributes: [ 'text' ], order: [[ "id", "DESC" ]], limit: 5 }
-          ],
-          where: { url_hash: stringHelper.getCleanUrlHashFromUrl(url) },
-          attributes: [ "url" ]
-        });
+        var urlHelper = require('../helpers/url');
+
+        return urlHelper.pickyLongUrlToHash(url).then(Reference.findByHash);
       },
 
       findByHash: function(hash) {
         var models = require('../models');
         return Reference.find({
-          include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
+          include: [
+            { model: models.Score, attributes: [ 'type', 'value' ] },
+            { model: models.Comment, attributes: [ 'text' ], order: [[ "id", "DESC" ]], limit: 5 }
+          ],
           where: { url_hash: hash },
-          attributes: [ "url" ]
+          attributes: Reference.filterAttributes()
         });
       },
 
       findByHashes: function(hashes) {
         var models = require('../models');
         return Reference.findAll({
-          include: [ { model: models.Score, attributes: [ 'type', 'value' ] } ],
+          include: [
+            { model: models.Score, attributes: [ 'type', 'value' ] },
+            { model: models.Comment, attributes: [ 'text' ], order: [[ "id", "DESC" ]], limit: 5 }
+          ],
           where: { url_hash: hashes },
-          attributes: [ "url" ]
+          attributes: Reference.filterAttributes()
         });
       },
 
       findByUrls: function(urls) {
         var models = require('../models');
-        var stringHelper = require('../helpers/string');
+        var urlHelper = require('../helpers/url');
         var hashes = [];
 
-        for(var i=0; i<urls.length; i++) {
-          hashes[i] = stringHelper.getCleanUrlHashFromUrl(urls[i]);
-          if ( i === (urls.length-1) ) { return Reference.findByHashes(hashes); }
-        }
+        return urlHelper.longUrlsToHashes(urls).then(Reference.findByHashes);
       }
     },
 

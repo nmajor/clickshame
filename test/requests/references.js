@@ -31,7 +31,6 @@ describe('requests', function () {
       var query = '?url='+url;
       query += '&key=GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo';
       request.get('http://localhost:3000/references/find'+query, function (err, res, body){
-        console.log('blahbody '+body);
         expect(res.statusCode).to.equal(200);
         body = JSON.parse(body);
         expect(body.url).to.equal(url);
