@@ -48,6 +48,7 @@ describe('url helpers', function () {
 
       urlHelper.longUrls(urlsWithShort)
       .then(function(response) {
+
         assert.equal(longUrls[0].originalUrl, response[0].originalUrl);
         assert.equal(longUrls[0].url, response[0].url);
 
