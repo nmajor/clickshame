@@ -53,13 +53,13 @@ describe('requests', function () {
     });
 
     it('gets a reference from a short URL returns the short url with the score of the long URL', function(done){
-      var url = 'bit.ly/1Hgx3pg';
+      var url = 'bit.ly%2F1Hgx3pg';
       var query = '?url='+url;
       query += '&key=GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo';
       request.get('http://localhost:3000/references/find'+query, function (err, res, body){
         expect(res.statusCode).to.equal(200);
         body = JSON.parse(body);
-        expect(body.url).to.equal(url);
+        expect(body.url).to.equal('bit.ly/1Hgx3pg');
 
         expect(body.Scores).to.be.ok;
         expect(body.Scores[0]).to.be.ok;
@@ -188,9 +188,6 @@ describe('requests', function () {
         expect(body.length).to.equal(4);
 
         var matchingUrls = body.filter(function(reference) { return reference.url === 'bit.ly/1Hgx3pg'; });
-
-        console.log('blahblahtest');
-        console.log(body);
 
         expect(matchingUrls.length).to.be.above(0);
 

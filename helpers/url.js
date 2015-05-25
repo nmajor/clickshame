@@ -31,6 +31,7 @@ module.exports = {
   },
 
   pickyLongUrl: function(url, hash) {
+    url = decodeURIComponent(url);
     var urlHelper = require('./url');
     var isShort = urlHelper.isShort(url);
 
