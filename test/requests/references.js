@@ -45,7 +45,6 @@ describe('requests', function () {
         expect(body.Comments[0].text).to.be.ok;
 
         expect(body.id).to.not.be.ok;
-        expect(body.url_hash).to.not.be.ok;
         expect(body.scored).to.not.be.ok;
         expect(body.updated_at).to.not.be.ok;
         expect(body.created_at).to.not.be.ok;
@@ -72,7 +71,6 @@ describe('requests', function () {
         expect(body.Comments[0].text).to.be.ok;
 
         expect(body.id).to.not.be.ok;
-        expect(body.url_hash).to.not.be.ok;
         expect(body.scored).to.not.be.ok;
         expect(body.updated_at).to.not.be.ok;
         expect(body.created_at).to.not.be.ok;
@@ -126,8 +124,6 @@ describe('requests', function () {
       request.get('http://localhost:3000/references/find'+query, function (err, res, body){
         expect(res.statusCode).to.equal(200);
         body = JSON.parse(body);
-        console.log('blah1');
-        console.log(body);
         expect(body.length).to.equal(4);
         expect(body[0].url).to.be.ok;
         expect(body[0].Scores).to.be.ok;
@@ -137,7 +133,7 @@ describe('requests', function () {
       });
     });
 
-    it('gets a references from an array of URLs with a POST request', function(done){
+    it('gets references from an array of URLs with a POST request', function(done){
       var data = {
         urls: [
           'http://mashable.com/2014/11/13/esa-scientist-sexist-shirt/',
@@ -163,6 +159,45 @@ describe('requests', function () {
         expect(body[0].Scores).to.be.ok;
         expect(body[0].Scores[0].type).to.be.ok;
         expect(body[0].Scores[0].value).to.be.ok;
+        done();
+      });
+    });
+
+    it('gets references from an array of URLs with a POST request and preserves the short url but counts the score', function(done){
+      var data = {
+        urls: [
+          'bit.ly/1Hgx3pg',
+          'http://mashable.com/2014/11/13/esa-scientist-sexist-shirt/',
+          'http://distractify.com/jake-heppner/scenes-from-the-past-you-never-expected-never-seen-before/',
+          'http://www.huffingtonpost.com/thomas-church/ryan-holiday-trust-me-im-lying_b_1715524.html',
+          'http://www.huffingtonpost.com/peggy-drexler/-will-we-ever-get-along-again_b_7162050.html',
+          'http://www.upworthy.com/youve-seen-these-works-of-art-but-youve-probably-never-seen-them-gluten-free-feast-your-eyes?c=hpstream',
+          'http://www.upworthy.com/a-condom-fundraising-video-that-has-it-all-unicorns-two-goofy-german-guys-and-hilarious-visuals?c=reccon1',
+          'http://www.buzzfeed.com/clairedelouraille/insanely-adorable-knitted-creatures#.qvmQNnL5X',
+          'http://www.buzzfeed.com/candacelowry/these-buddies-in-china-live-their-lives-according-to-friends#.kmR9NZ6gV'
+        ],
+        key: 'GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo'
+      };
+
+      request.post({
+        url: 'http://localhost:3000/references/find',
+        json: data,
+      }, function (err, res, body){
+        expect(res.statusCode).to.equal(200);
+        if ( typeof(body) === 'string' ) { body = JSON.parse(body); }
+        expect(body.length).to.equal(4);
+
+        var matchingUrls = body.filter(function(reference) { return reference.url === 'bit.ly/1Hgx3pg'; });
+
+        console.log('blahblahtest');
+        console.log(body);
+
+        expect(matchingUrls.length).to.be.above(0);
+
+        expect(body[0].url).to.be.ok;
+        expect(body[0].Scores).to.be.ok;
+        expect(body[0].Scores[0].value).to.be.above(0);
+        expect(body[0].Scores[0].type).to.be.ok;
         done();
       });
     });

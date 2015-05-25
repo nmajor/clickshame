@@ -51,7 +51,7 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       filterAttributes: function() {
-        return [ "url" ];
+        return [ "url", "url_hash" ];
       },
 
       updateScores: function() {
@@ -157,13 +157,13 @@ module.exports = function(sequelize, DataTypes) {
       reconsileShortUrls: function(references, longResults) {
         return new Promise(function(resolve){
           references.map(function(reference) {
-            var longFiltered = longResults.filter(function(result) { return result.hash === reference.url_hash && result.diff === true; });
+            var longFiltered = longResults.filter(function(result) { return (result.hash === reference.url_hash && result.diff === true); });
             if ( longFiltered.length === 0 ) { resolve( references ); }
             else {
               longFiltered.forEach(function(diffResult, index, array) {
                 reference.url = diffResult.originalUrl;
+                if ( index === (array.length - 1) ) { resolve( references ); }
               });
-              resolve( references );
             }
 
           });

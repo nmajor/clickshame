@@ -20,7 +20,7 @@ module.exports = {
     originalUrl = stringHelper.cleanUrl(originalUrl);
     url = stringHelper.cleanUrl(url);
 
-    var diff = !!( originalUrl === url );
+    var diff = !!( originalUrl !== url );
     var obj = {
       diff: diff,
       originalUrl: originalUrl
