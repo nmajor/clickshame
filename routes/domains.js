@@ -6,5 +6,6 @@ var domainsController = require('../controllers/domains');
 router.get('/top', domainsController.top);
 router.get('/find', domainsController.find);
 router.post('/find', domainsController.find);
+router.get('/total', domainsController.total);
 
 module.exports = router;

@@ -38,5 +38,13 @@ module.exports = {
 
       models.Request.logRequestFromReq(req, identity);
     });
+  },
+
+  total: function(req, res, next) {
+    models.Domain.count()
+    .then(function(num){
+      res.json(num);
+    })
+    .catch(function(e) { appHelper.sendError(res, 400, e.message); });
   }
 };

@@ -14,4 +14,12 @@ module.exports = {
     .catch(function(e) { appHelper.sendError(res, 400, e.message); });
   },
 
+  total: function(req, res, next) {
+    models.Identity.count()
+    .then(function(num){
+      res.json(num);
+    })
+    .catch(function(e) { appHelper.sendError(res, 400, e.message); });
+  }
+
 };
