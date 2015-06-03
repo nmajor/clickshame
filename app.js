@@ -36,6 +36,11 @@ app.use(function(req, res, next) {
     next(err);
 });
 
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+    next();
+});
+
 // error handlers
 
 // development error handler
