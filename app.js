@@ -1,4 +1,4 @@
-var express = require('express.oi');
+var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -24,6 +24,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
+
 app.use('/strikes', strikes);
 app.use('/identities', identities);
 app.use('/references', references);
@@ -31,14 +36,9 @@ app.use('/domains', domains);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-    next();
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 // error handlers
