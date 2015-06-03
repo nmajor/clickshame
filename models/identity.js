@@ -14,7 +14,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate: {
         isIn:  {
-          args: [['chrome']],
+          args: [['chrome', 'site']],
           msg: 'Invalid source parameter.'
         }
       }
