@@ -93,7 +93,7 @@ module.exports = function(sequelize, DataTypes) {
         return new Promise(function(resolve){
           this_strike.getIdentity()
           .then(function(identity) {
-            if ( identity.source === 'site' ) {
+            if ( identity.ip && identity.source === 'site' ) {
               this_strike.Model.findByKeyUrlAndIp( identity.key, this_strike.url, this_strike.ip )
               .then(resolve);
             } else {
@@ -243,7 +243,6 @@ module.exports = function(sequelize, DataTypes) {
       key: function() { return this._key; },
       comment: function(v) { return this._comment; },
       updateScores: function(v) { return this._updateScores; },
-      ip: function(v) { return this._ip; },
       recaptchaResponse: function(v) { return this._recaptchaResponse; }
     },
 
@@ -251,7 +250,6 @@ module.exports = function(sequelize, DataTypes) {
       key: function(v) { this._key = v; },
       comment: function(v) { this._comment = v; },
       updateScores: function(v) { this._updateScores = v; },
-      ip: function(v) { this._ip = v; },
       recaptchaResponse: function(v) { this._recaptchaResponse = v; }
     },
 
