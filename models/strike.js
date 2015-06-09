@@ -149,8 +149,13 @@ module.exports = function(sequelize, DataTypes) {
 
       isUnique: function() {
         var this_strike = this;
-        return this.likeMe().then(function(strike) {
-          if ( strike ) { return Promise.reject('You have already submitted this url.'); } else { return Promise.resolve(); }
+        return new Promise(function(resolve, reject){
+          this_strike.getIdentity(function(identity) {
+            if ( identity && identity.source === 'site' ) { resolve(); }
+            this_strike.likeMe().then(function(strike) {
+              if ( strike ) { reject('You have already submitted this url.'); } else { resolve(); }
+            });
+          });
         });
       },
 
