@@ -26,6 +26,7 @@ module.exports = {
   create: function(req, res, next) {
     if ( !req.body.url || !req.body.key || !req.body.type ) { appHelper.sendError(res, 400, 'Missing required parameters.'); return; }
     var identity;
+    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
     models.Identity.keyIsValid(req.body.key)
     .then(function(id) {
@@ -37,6 +38,8 @@ module.exports = {
         url: decodeURIComponent(req.body.url),
         type: req.body.type,
         comment: req.body.comment,
+        recaptchaResponse: req.body.recaptcha_response,
+        ip: ip,
         updateScores: true
       });
     })

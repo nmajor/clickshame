@@ -1,6 +1,7 @@
 /*jslint node: true */
 "use strict";
 var Promise = require("bluebird");
+var request = require('request');
 
 module.exports = function(sequelize, DataTypes) {
   var Strike = sequelize.define("Strike", {
@@ -98,7 +99,10 @@ module.exports = function(sequelize, DataTypes) {
           models.Identity.findByKey(this_strike.key)
           .then(function(identity) {
             if ( !identity ) { reject('Invalid identity key.'); }
-            else { this_strike.set("identity_id", identity.id); resolve(this_strike); }
+            else {
+              this_strike.set("identity_id", identity.id);
+              resolve(this_strike);
+            }
           });
         });
       },
@@ -148,6 +152,31 @@ module.exports = function(sequelize, DataTypes) {
         return this.likeMe().then(function(strike) {
           if ( strike ) { return Promise.reject('You have already submitted this url.'); } else { return Promise.resolve(); }
         });
+      },
+
+      checkRecaptcha: function() {
+        var this_strike = this;
+        return new Promise(function(resolve, reject){
+
+          this_strike.getIdentity()
+          .then(function(identity) {
+            if ( identity.source !== 'site' ) { resolve(); }
+            if ( !this_strike.recaptchaResponse ) { reject('Missing recaptcha response.'); }
+
+            var secret = require(__dirname + '/../config/config.json')["recaptcha_secret"];
+            var formData = {
+              secret: secret,
+              response: this_strike.recaptchaResponse,
+              remoteip: this_strike.ip
+            };
+
+            request.post({url:'https://www.google.com/recaptcha/api/siteverify', formData: formData}, function optionalCallback(err, httpResponse, body) {
+              if ( err || JSON.parse(body).success !== true ) { reject('Failed recaptcha.'); }
+              else { resolve(); }
+            });
+          });
+
+        });
       }
     },
 
@@ -161,7 +190,10 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       afterValidate: function(strike, options, callback) {
-        strike.isUnique().then(function() { callback(); }).catch(function(e) { callback(e); });
+        strike.isUnique()
+        .then(function() {
+          return strike.checkRecaptcha();
+        }).then(function() { callback(); }).catch(function(e) { callback(e); });
       },
 
       beforeCreate: function(strike, options, callback) {
@@ -186,13 +218,17 @@ module.exports = function(sequelize, DataTypes) {
     getterMethods: {
       key: function() { return this._key; },
       comment: function(v) { return this._comment; },
-      updateScores: function(v) { return this._updateScores; }
+      updateScores: function(v) { return this._updateScores; },
+      ip: function(v) { return this._ip; },
+      recaptchaResponse: function(v) { return this._recaptchaResponse; }
     },
 
     setterMethods: {
       key: function(v) { this._key = v; },
       comment: function(v) { this._comment = v; },
       updateScores: function(v) { this._updateScores = v; },
+      ip: function(v) { this._ip = v; },
+      recaptchaResponse: function(v) { this._recaptchaResponse = v; }
     },
 
   });
