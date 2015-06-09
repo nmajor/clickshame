@@ -9,6 +9,9 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    ip: {
+      type: DataTypes.STRING,
+    },
     type: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -55,6 +58,20 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
+      findByKeyUrlAndIp: function(key, url, ip) {
+        var models = require('../models');
+        return models.Identity.find({ where: { key: key } })
+        .then(function(identity) {
+          return new Promise(function(resolve, reject){
+            if ( !identity ) { reject('Invalid identity key.'); }
+            else {
+              Strike.find({ where: { url: url, identity_id: identity.id, ip: ip } })
+              .then( function(strike) { resolve(strike); });
+            }
+          });
+        });
+      },
+
       filter: function(strike) {
         if ( !strike ) { return new Promise(function(resolve){ resolve(''); }); }
         return new Promise(function(resolve){
@@ -76,8 +93,13 @@ module.exports = function(sequelize, DataTypes) {
         return new Promise(function(resolve){
           this_strike.getIdentity()
           .then(function(identity) {
-            this_strike.Model.findByKeyAndUrl( identity.key, this_strike.url )
-            .then(resolve);
+            if ( identity.source === 'site' ) {
+              this_strike.Model.findByKeyUrlAndIp( identity.key, this_strike.url, this_strike.ip )
+              .then(resolve);
+            } else {
+              this_strike.Model.findByKeyAndUrl( identity.key, this_strike.url )
+              .then(resolve);
+            }
           });
         });
       },
@@ -150,11 +172,8 @@ module.exports = function(sequelize, DataTypes) {
       isUnique: function() {
         var this_strike = this;
         return new Promise(function(resolve, reject){
-          this_strike.getIdentity(function(identity) {
-            if ( identity && identity.source === 'site' ) { resolve(); }
-            this_strike.likeMe().then(function(strike) {
-              if ( strike ) { reject('You have already submitted this url.'); } else { resolve(); }
-            });
+          this_strike.likeMe().then(function(strike) {
+            if ( strike ) { reject('You have already submitted this url.'); } else { resolve(); }
           });
         });
       },
