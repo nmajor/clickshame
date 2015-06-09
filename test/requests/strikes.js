@@ -42,6 +42,31 @@ describe('requests', function () {
       });
     });
 
+    it('returns an error with an invalid url', function(done){
+      models.Identity
+      .create({source: 'chrome'})
+      .then(function (identity) {
+        var data = {
+          key: identity.key,
+          type: 'clickbait',
+          comment: 'this post sucks',
+          url: 'yoyoblah'
+        };
+
+        request.post({
+          url: 'http://localhost:3000/strikes',
+          form: data
+        }, function (err, res, body){
+          expect(res.statusCode).to.equal(400);
+          body = JSON.parse(body);
+          expect(body.error).to.be.ok;
+          expect(body.error).to.equal('Invalid Url.');
+          done();
+        });
+
+      });
+    });
+
     it('returns a 400 error when type is invalid', function(done){
       var data = {
         key: 'GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo',
