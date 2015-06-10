@@ -200,7 +200,7 @@ module.exports = function(sequelize, DataTypes) {
               remoteip: this_strike.ip
             };
 
-            request.post({url:'https://www.google.com/recaptcha/api/siteverify', formData: formData}, function optionalCallback(err, httpResponse, body) {
+            request.post({url:'https://www.google.com/recaptcha/api/siteverify', form: formData}, function optionalCallback(err, httpResponse, body) {
               if ( err || JSON.parse(body).success !== true ) { reject('Failed recaptcha.'); }
               else { resolve(); }
             });
