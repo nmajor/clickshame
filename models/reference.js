@@ -43,9 +43,13 @@ module.exports = function(sequelize, DataTypes) {
       top: function(count) {
         var models = require('../models');
         return Reference.findAll({
-          include: [ { model: models.Score, attributes: [ 'type', 'value' ], where: { type: 'composite' } } ],
-          order: '"Scores"."value" DESC',
-          limit: count,
+          include: [ {
+            model: models.Score,
+            attributes: [ 'type', 'value' ],
+            where: { type: 'composite' },
+            order: '"Scores"."value" DESC',
+            limit: count,
+          } ],
           attributes: Reference.filterAttributes()
         });
       },
