@@ -50,6 +50,8 @@ module.exports = function(sequelize, DataTypes) {
             order: '"Scores"."value" DESC',
             limit: count,
           } ],
+          order: '"Scores"."value" DESC',
+          limit: count,
           attributes: Reference.filterAttributes()
         });
       },
