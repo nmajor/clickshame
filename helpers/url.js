@@ -60,7 +60,7 @@ module.exports = {
         method: "HEAD",
         url: shortUrl,
         followAllRedirects: true,
-        timeout: 10000,
+        timeout: 3000,
         pool: pool
       };
 
