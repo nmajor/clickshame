@@ -41,12 +41,14 @@ module.exports = function(sequelize, DataTypes) {
 
       top: function(count) {
         var models = require('../models');
-        return Domain.findAll({
-          include: [ { model: models.Score, attributes: [ 'type', 'value' ], where: { type: 'composite' } } ],
-          order: '"Scores"."value" DESC',
-          limit: count,
-          attributes: Domain.filterAttributes()
-        });
+        return models.Score.getTop( 'name', 'domains', 'domain', count );
+
+        // return Domain.findAll({
+        //   include: [ { model: models.Score, attributes: [ 'type', 'value' ], where: { type: 'composite' } } ],
+        //   order: '"Scores"."value" DESC',
+        //   limit: count,
+        //   attributes: Domain.filterAttributes()
+        // });
       },
 
       filterAttributes: function() {

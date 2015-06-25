@@ -42,18 +42,20 @@ module.exports = function(sequelize, DataTypes) {
 
       top: function(count) {
         var models = require('../models');
-        return Reference.findAll({
-          include: [ {
-            model: models.Score,
-            attributes: [ 'type', 'value' ],
-            where: { type: 'composite' },
-            order: '"Scores"."value" DESC',
-            limit: count,
-          } ],
-          order: '"Scores"."value" DESC',
-          limit: count,
-          attributes: Reference.filterAttributes()
-        });
+        return models.Score.getTop( 'url', 'references', 'reference', count );
+
+        // return Reference.findAll({
+        //   include: [ {
+        //     model: models.Score,
+        //     attributes: [ 'type', 'value' ],
+        //     where: { type: 'composite' },
+        //     order: '"Scores"."value" DESC',
+        //     limit: count,
+        //   } ],
+        //   order: '"Scores"."value" DESC',
+        //   limit: count,
+        //   attributes: Reference.filterAttributes()
+        // });
       },
 
       filterAttributes: function() {

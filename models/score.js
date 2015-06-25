@@ -49,6 +49,16 @@ module.exports = function(sequelize, DataTypes) {
         return models.Strike.count({ where: wheres });
       },
 
+      getTop: function(col, table, scorable, count) {
+        var query = 'SELECT "'+ table +'"."'+ col +'" AS "'+ col +'", "scores"."value" AS "score" FROM "'+ table +'"';
+        query += 'INNER JOIN "scores" ON "scores"."scorable_id" = "'+ table +'"."id" AND "scores"."scorable" = \''+ scorable +'\' AND "scores"."type" = \'composite\'';
+        query += 'ORDER BY "scores"."value" DESC LIMIT ?;';
+
+        return sequelize.query(query, {
+          replacements: [ count ], type: sequelize.QueryTypes.SELECT
+        });
+      },
+
       findAndSetValue: function(scorable, scorable_id, type, value, scores) {
         if ( value > 0 ) {
           return Score.findOrCreate({
