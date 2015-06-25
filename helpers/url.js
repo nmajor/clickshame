@@ -4,6 +4,10 @@ var Promise = require("bluebird");
 var stringHelper = require('./string');
 
 module.exports = {
+  isValidUrl: function(str) {
+    var regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
+    if ( str.match(regex) ) { return true; } else { return false; }
+  },
   isShort: function(url) {
     var cleanUrl = stringHelper.cleanUrl(url);
     var urlDomain = url.replace(/\/.*$/, '');
@@ -51,6 +55,7 @@ module.exports = {
     var urlHelper = require('./url');
     shortUrl = ( 'http://' + shortUrl.replace(/^.*?:\/\//, '') );
     return new Promise(function(resolve, reject){
+      if ( !urlHelper.isValidUrl( shortUrl ) ) { reject(false); }
       var defaultOptions = {
         method: "HEAD",
         url: shortUrl,

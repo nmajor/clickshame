@@ -102,9 +102,15 @@ module.exports = function(sequelize, DataTypes) {
 
       findFromQuery: function(query) {
         if ( query.hasOwnProperty('hash') ) { return Reference.findByHash(query.hash); }
-        else if ( query.hasOwnProperty('hashes') ) { return Reference.findByHashes(query.hashes); }
+        else if ( query.hasOwnProperty('hashes') ) {
+          if ( typeof query.hashes == 'string' ) { query.hashes = [ query.hashes ] }
+          return Reference.findByHashes(query.hashes);
+        }
         else if ( query.hasOwnProperty('url') ) { return Reference.findByUrl(query.url); }
-        else if ( query.hasOwnProperty('urls') ) { return Reference.findByUrls(query.urls); }
+        else if ( query.hasOwnProperty('urls') ) {
+          if ( typeof query.urls == 'string' ) { query.urls = [ query.urls ] }
+          return Reference.findByUrls(query.urls);
+        }
       },
 
       findByUrl: function(url) {
