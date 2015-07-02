@@ -18,5 +18,16 @@ module.exports = {
     if ( typeof(message) === 'object' ) { message = message.message; }
 
     res.status(code); res.json({ error: message.replace(/^Validation error:\s/, '') });
+  },
+  stripEmpty: function(arr) {
+    return new Promise(function(resolve){
+      for (var i = 0; i < arr.length; i++) {
+        if ( arr[i].length === 0 ) {
+          arr.splice(i, 1);
+          i--;
+        }
+      }
+      resolve(arr);
+    });
   }
 };

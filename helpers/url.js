@@ -2,6 +2,7 @@ var request = require("request");
 var http = require('http');
 var Promise = require("bluebird");
 var stringHelper = require('./string');
+var appHelper = require('./app');
 
 module.exports = {
   isValidUrl: function(str) {
@@ -48,14 +49,14 @@ module.exports = {
   pickyLongUrlToHash: function(url) {
     var urlHelper = require('./url');
 
-    return urlHelper.pickyLongUrl(url, true);
+    return urlHelper.pickyLongUrl(url, true).then();
   },
 
   longUrl: function(shortUrl, hash) {
     var urlHelper = require('./url');
     shortUrl = ( 'http://' + shortUrl.replace(/^.*?:\/\//, '') );
     return new Promise(function(resolve, reject){
-      if ( !urlHelper.isValidUrl( shortUrl ) ) { reject(false); }
+      if ( !urlHelper.isValidUrl( shortUrl ) ) { return resolve(''); }
       var defaultOptions = {
         method: "HEAD",
         url: shortUrl,
@@ -66,10 +67,10 @@ module.exports = {
 
       var pool = new http.Agent({'maxSockets': Infinity});
       request(defaultOptions, function (error, response) {
-          if (error) { reject(error); }
+          if (error) { return resolve(''); }
           else {
-            if ( hash === true ) { resolve( urlHelper.formatObj( shortUrl, response.request.href, true ) ); }
-            else { resolve( urlHelper.formatObj( shortUrl, response.request.href, false ) ); }
+            if ( hash === true ) { return resolve( urlHelper.formatObj( shortUrl, response.request.href, true ) ); }
+            else { return resolve( urlHelper.formatObj( shortUrl, response.request.href, false ) ); }
           }
       }).setMaxListeners(0);
     });
@@ -77,11 +78,11 @@ module.exports = {
 
   longUrls: function(urls) {
     _this = this;
-    return Promise.resolve(urls).map(_this.pickyLongUrl);
+    return Promise.resolve(urls).map(_this.pickyLongUrl).then(appHelper.stripEmpty);
   },
 
   longUrlsToHashes: function(urls) {
     _this = this;
-    return Promise.resolve(urls).map(_this.pickyLongUrlToHash);
+    return Promise.resolve(urls).map(_this.pickyLongUrlToHash).then(appHelper.stripEmpty);
   }
 };
