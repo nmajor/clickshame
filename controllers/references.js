@@ -37,7 +37,7 @@ module.exports = {
       res.json(reference);
 
       models.Request.logRequestFromReq(req, identity);
-    });
+    }).catch(function(e) { appHelper.sendError(res, 400, e); });
   },
 
   total: function(req, res, next) {

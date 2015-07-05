@@ -2,57 +2,6 @@ NODE_ENV=development DEBUG=express:* ./bin/www
 NODE_ENV=test mocha --recursive
 NODE_ENV=production pm2 start ./bin/www
 
-API
-
-post /strikes                        - create a strike
-post /identities                     - create an identity
-
-get  /strikes
-params = {
-  no-params: "top 10 most recent strikes",
-  count: { data: "number", returns: "number of most recent strikes to show" },
-}
-
-get  /references
-params = {
-  no-params: "top 10 references with the most strikes",
-  urls: { data: "array of urls", returns: "an array references with clickshame score if any, returns a blank array if not" }
-  url: { data: "url string", returns: "a reference if one exists with the specific url, returns a blank array if not" }
-  count: { data: "number", returns: "the top [count] references with the most strikes" },
-}
-
-get  /domains
-params = {
-  no-params: "top 10 domains with the most strikes",
-  domains: { data: "array of domains", returns: "an array domains with clickshame score if any, returns a blank array if not" }
-  domain: { data: "domain string", returns: "an array domains with clickshame score if any, returns a blank array if not" }
-  urls: { data: "array of urls", returns: "an array domains with clickshame score if any, returns a blank array if not" }
-  url: { data: "url string", returns: "a domains if one exists with the specific url, returns a blank array if not" }
-  count: { data: "number", returns: "the top [count] domains with the most strikes" },
-}
-
-sequelize migration:create --name [migration_name]       # Generates a new migration file.
-sequelize db:migrate        # Run pending migrations.
-
-node ./scripts/dbsync.js         # Sync db tables with models
-
-drop table "SequelizeMeta","comments","domains","identities","references","scores","strikes" cascade;
-
-NODE_ENV=test node ./scripts/dbsync.js
-NODE_ENV=test sequelize db:migrate
-
-var models = require('./models');
-models.Domain.updateScores();
-models.Reference.updateScores();
-
-NODE_ENV=development node ./scripts/dbsync.js
-NODE_ENV=development sequelize db:migrate
-
-NODE_ENV=production node ./scripts/dbsync.js
-NODE_ENV=production sequelize db:migrate
-
-resolve, reject
-
 GET paths
 /strikes/recent
 /referenes/top
@@ -63,17 +12,27 @@ GET paths
 POST paths
 /strikes
 /identities
+/references/find
+/domains/find
 
-
-
-Data to track
-identities created per day (already done)
-identities submitting at least one strike per day (already done)
-identities querying at least a few lists of urls per day (needed)
-
-Fraud prevention, make it so identities have to be submitting queries daily in order for their strikes to count
-
-
-
-
+www-3 (err):     at MappingPromiseArray.init [as _init$] (/home/deployer/clickshame/node_modules/bluebird/js/main/promise_array.js:92:18)
+www-3 (err):     at MappingPromiseArray.init (/home/deployer/clickshame/node_modules/bluebird/js/main/map.js:27:23)
+www-3 (err):     at Async._drainQueue (/home/deployer/clickshame/node_modules/bluebird/js/main/async.js:180:12)
+www-3 (err):     at Async._drainQueues (/home/deployer/clickshame/node_modules/bluebird/js/main/async.js:185:10)
+www-3 (err):     at Async.drainQueues (/home/deployer/clickshame/node_modules/bluebird/js/main/async.js:15:14)
+www-3 (err):     at process._tickCallback (node.js:415:13)
+www-3 (err): Possibly unhandled URIError: URI malformed
+www-3 (err):     at decodeURIComponent (native)
+www-3 (err):     at Object.module.exports.cleanUrl (/home/deployer/clickshame/helpers/string.js:18:18)
+www-3 (err):     at Object.module.exports.isShort (/home/deployer/clickshame/helpers/url.js:13:33)
+www-3 (err):     at Object.module.exports.pickyLongUrl (/home/deployer/clickshame/helpers/url.js:41:29)
+www-3 (err):     at module.exports.pickyLongUrlToHash (/home/deployer/clickshame/helpers/url.js:52:22)
+www-3 (err):     at tryCatcher (/home/deployer/clickshame/node_modules/bluebird/js/main/util.js:24:31)
+www-3 (err):     at MappingPromiseArray._promiseFulfilled (/home/deployer/clickshame/node_modules/bluebird/js/main/map.js:54:38)
+www-3 (err):     at MappingPromiseArray.init [as _init$] (/home/deployer/clickshame/node_modules/bluebird/js/main/promise_array.js:92:18)
+www-3 (err):     at MappingPromiseArray.init (/home/deployer/clickshame/node_modules/bluebird/js/main/map.js:27:23)
+www-3 (err):     at Async._drainQueue (/home/deployer/clickshame/node_modules/bluebird/js/main/async.js:180:12)
+www-3 (err):     at Async._drainQueues (/home/deployer/clickshame/node_modules/bluebird/js/main/async.js:185:10)
+www-3 (err):     at Async.drainQueues (/home/deployer/clickshame/node_modules/bluebird/js/main/async.js:15:14)
+www-3 (err):     at process._tickCallback (node.js:415:13)
 
