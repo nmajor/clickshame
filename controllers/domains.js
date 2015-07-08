@@ -31,12 +31,12 @@ module.exports = {
     models.Identity.keyIsValid(params.key)
     .then(function(id) {
       identity = id;
-      return models.Domain.findFromQuery(params);
+      return models.Domain.findFromQuery(params).catch(function(e) { appHelper.sendError(res, 400, e); });
     })
     .then(function(domain) {
       res.json(domain);
 
-      models.Request.logRequestFromReq(req, identity);
+      models.Request.logRequestFromReq(req, identity).catch(function(e) { appHelper.sendError(res, 400, e); });
     }).catch(function(e) { appHelper.sendError(res, 400, e); });
   },
 
