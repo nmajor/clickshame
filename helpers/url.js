@@ -57,6 +57,10 @@ module.exports = {
     shortUrl = ( 'http://' + shortUrl.replace(/^.*?:\/\//, '') );
     return new Promise(function(resolve, reject){
       if ( !urlHelper.isValidUrl( shortUrl ) ) { return resolve(''); }
+
+      // Debuging
+      return urlHelper.formatObj( url, url, hash )
+
       var defaultOptions = {
         method: "HEAD",
         url: shortUrl,
