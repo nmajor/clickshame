@@ -170,6 +170,8 @@ module.exports = function(sequelize, DataTypes) {
 
       reconsileShortUrls: function(references, longResults) {
         return new Promise(function(resolve){
+          if ( references.length === 0 ) { resolve( references ); }
+
           references.map(function(reference) {
             var longFiltered = longResults.filter(function(result) { return (result.hash === reference.url_hash && result.diff === true); });
             if ( longFiltered.length === 0 ) { resolve( references ); }
@@ -183,6 +185,7 @@ module.exports = function(sequelize, DataTypes) {
           });
         });
       }
+
     },
 
     instanceMethods: {

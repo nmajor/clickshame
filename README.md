@@ -2,7 +2,7 @@ NODE_ENV=development DEBUG=express:* ./bin/www
 NODE_ENV=test mocha --recursive
 NODE_ENV=production pm2 start ./bin/www
 
-NODE_ENV=production forever start ./bin/www
+NODE_ENV=test mocha --grep BUG --recursive
 
 GET paths
 /strikes/recent

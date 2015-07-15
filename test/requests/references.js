@@ -109,6 +109,24 @@ describe('requests', function () {
       });
     });
 
+    it('BUG gets a references from an array of URLs that are breaking things', function(done){
+      var data = {
+        urls: [
+          'clickshame.com%2Fdemo.html',
+          'addthis.com%2Fwebsite-tools%2Foverview'
+        ],
+        key: 'GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo'
+      };
+
+      request.post({
+        url: 'http://localhost:3000/references/find',
+        json: data,
+      }, function (err, res, body){
+        expect(res.statusCode).to.equal(200);
+        done();
+      });
+    });
+
     it('gets a references from an array of URLs', function(done){
       var query = '?urls[]='+encodeURIComponent('http://mashable.com/2014/11/13/esa-scientist-sexist-shirt/');
       query += '&urls[]='+encodeURIComponent('http://distractify.com/jake-heppner/scenes-from-the-past-you-never-expected-never-seen-before/');

@@ -30,10 +30,12 @@ module.exports = {
 
     models.Identity.keyIsValid(params.key)
     .then(function(id) {
+
       identity = id;
       return models.Reference.findFromQuery(params);
     })
     .then(function(reference) {
+
       res.json(reference);
 
       models.Request.logRequestFromReq(req, identity);
