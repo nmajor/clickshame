@@ -184,7 +184,6 @@ describe('requests', function () {
     it('gets references from an array of URLs with a POST request and preserves the short url but counts the score', function(done){
       var data = {
         urls: [
-          'bit.ly/1Hgx3pg',
           'http://mashable.com/2014/11/13/esa-scientist-sexist-shirt/',
           'http://distractify.com/jake-heppner/scenes-from-the-past-you-never-expected-never-seen-before/',
           'http://www.huffingtonpost.com/thomas-church/ryan-holiday-trust-me-im-lying_b_1715524.html',
@@ -192,6 +191,7 @@ describe('requests', function () {
           'http://www.upworthy.com/youve-seen-these-works-of-art-but-youve-probably-never-seen-them-gluten-free-feast-your-eyes?c=hpstream',
           'http://www.upworthy.com/a-condom-fundraising-video-that-has-it-all-unicorns-two-goofy-german-guys-and-hilarious-visuals?c=reccon1',
           'http://www.buzzfeed.com/clairedelouraille/insanely-adorable-knitted-creatures#.qvmQNnL5X',
+          'bit.ly/1Hgx3pg',
           'http://www.buzzfeed.com/candacelowry/these-buddies-in-china-live-their-lives-according-to-friends#.kmR9NZ6gV'
         ],
         key: 'GhcM92AQjotgUu9lzkwWJFWywfbk5k7yeaioVJxzizHjf9RByo'
