@@ -2,7 +2,7 @@
   "consul": "consul:8500",
   "services": [
     {
-      "name": "steamleft",
+      "name": "clickshame",
       "port": 80,
       "interfaces": ["eth0"],
       "health": "/usr/bin/curl --fail -s http://localhost/health",
