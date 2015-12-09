@@ -10,6 +10,7 @@ var strikes = require('./routes/strikes');
 var identities = require('./routes/identities');
 var references = require('./routes/references');
 var domains = require('./routes/domains');
+var health = require('./routes/health');
 
 var app = express();
 
@@ -41,6 +42,7 @@ app.use('/strikes', strikes);
 app.use('/identities', identities);
 app.use('/references', references);
 app.use('/domains', domains);
+app.use('/health', health);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
