@@ -12,6 +12,11 @@ exports.config = {
   /**
    * Your New Relic license key.
    */
+ rules : {
+    ignore : [
+      '^\/health'
+    ]
+  },
   license_key: 'b5ba70c3c0aed01c515632f8208ded43c9dd3598',
   logging: {
     /**
@@ -21,4 +26,4 @@ exports.config = {
      */
     level: 'info'
   }
-}
+};
