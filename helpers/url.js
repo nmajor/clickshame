@@ -58,6 +58,8 @@ module.exports = {
     return new Promise(function(resolve, reject){
       if ( !urlHelper.isValidUrl( shortUrl ) ) { return resolve(''); }
 
+      var pool = new http.Agent({'maxSockets': Infinity});
+
       var defaultOptions = {
         method: "HEAD",
         url: shortUrl,
@@ -66,10 +68,8 @@ module.exports = {
         pool: pool
       };
 
-      var pool = new http.Agent({'maxSockets': Infinity});
-
-      console.log('short URL request');
-      console.log(defaultOptions);
+      // console.log('short URL request');
+      // console.log(defaultOptions);
 
       request(defaultOptions, function (error, response) {
           if (error) { return resolve(''); }

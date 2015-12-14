@@ -38,6 +38,15 @@ app.use(function (req, res, next) {
   next();
 });
 
+var memwatch = require('memwatch');
+memwatch.on('leak', function(info) {
+  require('fs').writeFile("memlog/info/memwatch-dump"+Date.now(), JSON.stringify(info));
+});
+
+memwatch.on('stats', function(stats) {
+  require('fs').writeFile("memlog/stats/memwatch-dump"+Date.now(), JSON.stringify(stats));
+});
+
 app.use('/strikes', strikes);
 app.use('/identities', identities);
 app.use('/references', references);
